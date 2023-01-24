@@ -204,7 +204,11 @@ class SpoofIrReceiver {
 
 SpoofIrReceiver IrReceiver;
 
-#include "../libraries/Arduino-IRremote-mod/src/IRProtocol.h"
+//#include "../libraries/Arduino-IRremote-mod/src/IRProtocol.h"
+//TODO: fix
+#include "../libraries/IRremoteESP8266/src/IRremoteESP8266.h"
+#include "../libraries/IRremoteESP8266/src/IRsend.h"
+//#include "../libraries/IRremoteESP8266/src/IRsend.h"
 
 // this is to replicate places where the library uses the static class.
 // will need to update to call our dynamic class
@@ -236,7 +240,8 @@ SpoofIrSender IrSender;
 
 // this is the actual IR library include.
 // it's all in .h and .hpp files, no .c or .cpp
-#include "../libraries/Arduino-IRremote-mod/src/IRremote.hpp"
+//#include "../libraries/Arduino-IRremote-mod/src/IRremote.hpp"
+//TODO: fix
 
 extern "C" int PIN_GetPWMIndexForPinIndex(int pin) ;
 
@@ -248,8 +253,7 @@ extern "C" int PIN_GetPWMIndexForPinIndex(int pin) ;
 #define SEND_MAXBITS 128
 class myIRsend : public IRsend {
     public:
-        myIRsend(uint_fast8_t aSendPin){
-            //IRsend::IRsend(aSendPin); - has been called already?
+        myIRsend(uint_fast8_t aSendPin):IRsend(aSendPin){
             our_us = 0;
             our_ms = 0;
             resetsendqueue();
