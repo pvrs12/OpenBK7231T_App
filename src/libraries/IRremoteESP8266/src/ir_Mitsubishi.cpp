@@ -19,16 +19,17 @@
 /// @see https://github.com/kuchel77
 
 #include "ir_Mitsubishi.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
 #include "ir_Tcl.h"
+#include "minmax.h"
 
 // Constants
 // Mitsubishi TV
@@ -392,8 +393,8 @@ bool IRMitsubishiAC::getPower(void) const {
 /// @note The temperature resolution is 0.5 of a degree.
 void IRMitsubishiAC::setTemp(const float degrees) {
   // Make sure we have desired temp in the correct range.
-  float celsius = std::max(degrees, kMitsubishiAcMinTemp);
-  celsius = std::min(celsius, kMitsubishiAcMaxTemp);
+  float celsius = ::max(degrees, kMitsubishiAcMinTemp);
+  celsius = ::min(celsius, kMitsubishiAcMaxTemp);
   // Convert to integer nr. of half degrees.
   uint8_t nrHalfDegrees = celsius * 2;
   // Do we have a half degree celsius?
@@ -527,7 +528,7 @@ bool IRMitsubishiAC::getAbsenseDetect(void) const {
 /// @param[in] mode requested Direct/Indirect mode.
 void IRMitsubishiAC::setDirectIndirect(const uint8_t mode) {
   if (_.ISee) {
-    _.DirectIndirect = std::min(mode, kMitsubishiAcDirect);  // bounds check
+    _.DirectIndirect = ::min(mode, kMitsubishiAcDirect);  // bounds check
   } else {
     _.DirectIndirect = 0;
   }
@@ -556,7 +557,7 @@ bool IRMitsubishiAC::getNaturalFlow(void) const {
 /// @note On some models, this represents the Right vertical vane.
 /// @param[in] position The position/mode to set the vane to.
 void IRMitsubishiAC::setVane(const uint8_t position) {
-  uint8_t pos = std::min(position, kMitsubishiAcVaneAutoMove);  // bounds check
+  uint8_t pos = ::min(position, kMitsubishiAcVaneAutoMove);  // bounds check
   _.VaneBit = 1;
   _.Vane = pos;
 }
@@ -571,7 +572,7 @@ uint8_t IRMitsubishiAC::getVane(void) const {
 /// Set the requested Left Vane (Vertical Swing) operation mode of the a/c unit.
 /// @param[in] position The position/mode to set the vane to.
 void IRMitsubishiAC::setVaneLeft(const uint8_t position) {
-  _.VaneLeft = std::min(position, kMitsubishiAcVaneAutoMove);  // bounds check
+  _.VaneLeft = ::min(position, kMitsubishiAcVaneAutoMove);  // bounds check
 }
 
 /// Get the Left Vane (Vertical Swing) mode of the A/C.
@@ -581,7 +582,7 @@ uint8_t IRMitsubishiAC::getVaneLeft(void) const { return _.VaneLeft; }
 /// Set the requested wide-vane (Horizontal Swing) operation mode of the a/c.
 /// @param[in] position The position/mode to set the wide vane to.
 void IRMitsubishiAC::setWideVane(const uint8_t position) {
-  _.WideVane = std::min(position, kMitsubishiAcWideVaneAuto);
+  _.WideVane = ::min(position, kMitsubishiAcWideVaneAuto);
 }
 
 /// Get the Wide Vane (Horizontal Swing) mode of the A/C.
@@ -1030,8 +1031,8 @@ bool IRMitsubishi136::getPower(void) const {
 /// Set the temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRMitsubishi136::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max((uint8_t)kMitsubishi136MinTemp, degrees);
-  temp = std::min((uint8_t)kMitsubishi136MaxTemp, temp);
+  uint8_t temp = ::max((uint8_t)kMitsubishi136MinTemp, degrees);
+  temp = ::min((uint8_t)kMitsubishi136MaxTemp, temp);
   _.Temp = temp - kMitsubishiAcMinTemp;
 }
 
@@ -1044,7 +1045,7 @@ uint8_t IRMitsubishi136::getTemp(void) const {
 /// Set the speed of the fan.
 /// @param[in] speed The desired setting.
 void IRMitsubishi136::setFan(const uint8_t speed) {
-  _.Fan = std::min(speed, kMitsubishi136FanMax);
+  _.Fan = ::min(speed, kMitsubishi136FanMax);
 }
 
 /// Get the current fan speed setting.
@@ -1424,8 +1425,8 @@ bool IRMitsubishi112::getPower(void) const {
 /// Set the temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRMitsubishi112::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max((uint8_t)kMitsubishi112MinTemp, degrees);
-  temp = std::min((uint8_t)kMitsubishi112MaxTemp, temp);
+  uint8_t temp = ::max((uint8_t)kMitsubishi112MinTemp, degrees);
+  temp = ::min((uint8_t)kMitsubishi112MaxTemp, temp);
   _.Temp = kMitsubishiAcMaxTemp - temp;
 }
 

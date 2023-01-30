@@ -7,7 +7,7 @@
 // Supports:
 //   Brand: Lasertag,  Model: Phaser emitters
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

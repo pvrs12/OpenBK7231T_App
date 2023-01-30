@@ -6,9 +6,9 @@
 /// Vestel added by Erdem U. Altinyurt
 
 #include "ir_Vestel.h"
-#include <algorithm>
+//// #include <algorithm>
 #ifndef UNIT_TEST
-#include <Arduino.h>
+#include "String.h"
 #endif
 #include "IRrecv.h"
 #include "IRremoteESP8266.h"
@@ -16,7 +16,7 @@
 #include "IRtext.h"
 #include "IRutils.h"
 #include "ir_Haier.h"
-
+#include "minmax.h"
 // Ref:
 //   None. Totally reverse engineered.
 
@@ -123,8 +123,8 @@ bool IRVestelAc::getPower(void) const {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRVestelAc::setTemp(const uint8_t temp) {
-  uint8_t new_temp = std::max(kVestelAcMinTempC, temp);
-  new_temp = std::min(kVestelAcMaxTemp, new_temp);
+  uint8_t new_temp = ::max(kVestelAcMinTempC, temp);
+  new_temp = ::min(kVestelAcMaxTemp, new_temp);
   _.Temp = new_temp - kVestelAcMinTempH;
   _.UseCmd = true;
 }

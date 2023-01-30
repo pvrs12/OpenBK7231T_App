@@ -10,10 +10,10 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1757
 
 #include "ir_Hitachi.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRremoteESP8266.h"
@@ -203,7 +203,7 @@ uint8_t *IRHitachiAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the new_code array.
 void IRHitachiAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length, kHitachiAcStateLength));
+  std::memcpy(_.raw, new_code, ::min(length, kHitachiAcStateLength));
 }
 
 #if SEND_HITACHI_AC
@@ -270,8 +270,8 @@ void IRHitachiAc::setTemp(const uint8_t celsius) {
       temp = celsius;
       break;
     default:
-      temp = std::min(celsius, kHitachiAcMaxTemp);
-      temp = std::max(temp, kHitachiAcMinTemp);
+      temp = ::min(celsius, kHitachiAcMaxTemp);
+      temp = ::max(temp, kHitachiAcMinTemp);
   }
   _.Temp = reverseBits(temp << 1, 8);
   if (temp == kHitachiAcMinTemp)
@@ -298,8 +298,8 @@ void IRHitachiAc::setFan(const uint8_t speed) {
       fanmin = kHitachiAcFanLow;  // No Auto in Fan mode.
       break;
   }
-  uint8_t newspeed = std::max(speed, fanmin);
-  newspeed = std::min(newspeed, fanmax);
+  uint8_t newspeed = ::max(speed, fanmin);
+  newspeed = ::min(newspeed, fanmax);
   _.Fan = reverseBits(newspeed, 8);
 }
 
@@ -491,7 +491,7 @@ uint8_t *IRHitachiAc1::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the new_code array.
 void IRHitachiAc1::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length, kHitachiAc1StateLength));
+  std::memcpy(_.raw, new_code, ::min(length, kHitachiAc1StateLength));
 }
 
 #if SEND_HITACHI_AC
@@ -598,8 +598,8 @@ uint8_t IRHitachiAc1::getTemp(void) const {
 /// @param[in] celsius The temperature in degrees celsius.
 void IRHitachiAc1::setTemp(const uint8_t celsius) {
   if (_.Mode == kHitachiAc1Auto) return;  // Can't change temp in Auto mode.
-  uint8_t temp = std::min(celsius, kHitachiAcMaxTemp);
-  temp = std::max(temp, kHitachiAcMinTemp);
+  uint8_t temp = ::min(celsius, kHitachiAcMaxTemp);
+  temp = ::max(temp, kHitachiAcMinTemp);
   temp -= kHitachiAc1TempDelta;
   temp = reverseBits(temp, kHitachiAc1TempSize);
   _.Temp = temp;
@@ -691,7 +691,7 @@ void IRHitachiAc1::setSleep(const uint8_t mode) {
   switch (_.Mode) {
     case kHitachiAc1Auto:
     case kHitachiAc1Cool:
-      _.Sleep = std::min(mode, kHitachiAc1Sleep4);
+      _.Sleep = ::min(mode, kHitachiAc1Sleep4);
       break;
     default:
       _.Sleep = kHitachiAc1SleepOff;
@@ -1062,7 +1062,7 @@ uint8_t *IRHitachiAc424::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the new_code array.
 void IRHitachiAc424::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length, kHitachiAc424StateLength));
+  std::memcpy(_.raw, new_code, ::min(length, kHitachiAc424StateLength));
 }
 
 #if SEND_HITACHI_AC424
@@ -1125,8 +1125,8 @@ uint8_t IRHitachiAc424::getTemp(void) const {
 /// @param[in] setPrevious true, remember this if we change mode. false, don't.
 void IRHitachiAc424::setTemp(const uint8_t celsius, bool setPrevious) {
   uint8_t temp;
-  temp = std::min(celsius, kHitachiAc424MaxTemp);
-  temp = std::max(temp, kHitachiAc424MinTemp);
+  temp = ::min(celsius, kHitachiAc424MaxTemp);
+  temp = ::max(temp, kHitachiAc424MinTemp);
   _.Temp = temp;
   if (_previoustemp > temp)
     setButton(kHitachiAc424ButtonTempDown);
@@ -1144,7 +1144,7 @@ uint8_t IRHitachiAc424::getFan(void) const {
 /// Set the speed of the fan.
 /// @param[in] speed The desired setting.
 void IRHitachiAc424::setFan(const uint8_t speed) {
-  uint8_t newSpeed = std::max(speed, kHitachiAc424FanMin);
+  uint8_t newSpeed = ::max(speed, kHitachiAc424FanMin);
   uint8_t fanMax = kHitachiAc424FanMax;
 
   // Only 2 x low speeds in Dry mode or Auto
@@ -1157,7 +1157,7 @@ void IRHitachiAc424::setFan(const uint8_t speed) {
     newSpeed = kHitachiAc424FanMin;
   }
 
-  newSpeed = std::min(newSpeed, fanMax);
+  newSpeed = ::min(newSpeed, fanMax);
   // Handle the setting the button value if we are going to change the value.
   if (newSpeed != _.Fan) setButton(kHitachiAc424ButtonFan);
   // Set the values
@@ -1419,7 +1419,7 @@ uint8_t *IRHitachiAc3::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the new_code array.
 void IRHitachiAc3::setRaw(const uint8_t new_code[], const uint16_t length) {
-  memcpy(remote_state, new_code, std::min(length, kHitachiAc3StateLength));
+  memcpy(remote_state, new_code, ::min(length, kHitachiAc3StateLength));
 }
 
 #if DECODE_HITACHI_AC3
@@ -1505,7 +1505,7 @@ void IRHitachiAc344::send(const uint16_t repeat) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length Size (in bytes) of the code for this protocol.
 void IRHitachiAc344::setRaw(const uint8_t new_code[], const uint16_t length) {
-  memcpy(_.raw, new_code, std::min(length, kHitachiAc344StateLength));
+  memcpy(_.raw, new_code, ::min(length, kHitachiAc344StateLength));
 }
 
 /// Control the vertical swing setting.
@@ -1641,7 +1641,7 @@ void IRHitachiAc264::send(const uint16_t repeat) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length Size (in bytes) of the code for this protocol.
 void IRHitachiAc264::setRaw(const uint8_t new_code[], const uint16_t length) {
-  memcpy(_.raw, new_code, std::min(length, kHitachiAc264StateLength));
+  memcpy(_.raw, new_code, ::min(length, kHitachiAc264StateLength));
 }
 
 /// Set the speed of the fan.
@@ -1862,8 +1862,8 @@ void IRHitachiAc296::setTemp(const uint8_t celsius) {
   if (getMode() == kHitachiAc296Auto) {  // Special temp for auto mode
     temp = kHitachiAc296TempAuto;
   } else {  // Normal temp setting.
-    temp = std::min(temp, kHitachiAc296MaxTemp);
-    temp = std::max(temp, kHitachiAc296MinTemp);
+    temp = ::min(temp, kHitachiAc296MaxTemp);
+    temp = ::max(temp, kHitachiAc296MinTemp);
   }
   _.Temp = temp;
 }
@@ -1875,8 +1875,8 @@ uint8_t IRHitachiAc296::getFan(void) const { return _.Fan; }
 /// Set the speed of the fan.
 /// @param[in] speed The desired setting.
 void IRHitachiAc296::setFan(const uint8_t speed) {
-  uint8_t newSpeed = std::max(speed, kHitachiAc296FanSilent);
-  _.Fan = std::min(newSpeed, kHitachiAc296FanAuto);
+  uint8_t newSpeed = ::max(speed, kHitachiAc296FanSilent);
+  _.Fan = ::min(newSpeed, kHitachiAc296FanAuto);
 }
 
 /// Convert a stdAc::fanspeed_t enum into it's native speed.
@@ -1917,7 +1917,7 @@ uint8_t *IRHitachiAc296::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length Size (in bytes) of the code for this protocol.
 void IRHitachiAc296::setRaw(const uint8_t new_code[], const uint16_t length) {
-  memcpy(_.raw, new_code, std::min(length, kHitachiAc296StateLength));
+  memcpy(_.raw, new_code, ::min(length, kHitachiAc296StateLength));
 }
 
 

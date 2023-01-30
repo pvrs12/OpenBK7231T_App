@@ -5,9 +5,9 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/697
 
 #include "ir_Goodweather.h"
-#include <algorithm>
+// #include <algorithm>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRremoteESP8266.h"
@@ -110,8 +110,8 @@ bool IRGoodweatherAc::getPower(void) const {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRGoodweatherAc::setTemp(const uint8_t temp) {
-  uint8_t new_temp = std::max(kGoodweatherTempMin, temp);
-  new_temp = std::min(kGoodweatherTempMax, new_temp);
+  uint8_t new_temp = ::max(kGoodweatherTempMin, temp);
+  new_temp = ::min(kGoodweatherTempMax, new_temp);
   if (new_temp > getTemp()) _.Command = kGoodweatherCmdUpTemp;
   if (new_temp < getTemp()) _.Command = kGoodweatherCmdDownTemp;
   _.Temp = new_temp - kGoodweatherTempMin;

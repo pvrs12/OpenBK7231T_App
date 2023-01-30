@@ -8,7 +8,7 @@
 // Supports:
 //   Brand: Nikai,  Model: Unknown LCD TV
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

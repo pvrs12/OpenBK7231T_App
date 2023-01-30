@@ -4,7 +4,7 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1670
 
 #include "ir_Airton.h"
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
@@ -203,8 +203,8 @@ stdAc::opmode_t IRAirtonAc::toCommonMode(const uint8_t mode) {
 /// Set the temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRAirtonAc::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kAirtonMinTemp, degrees);
-  temp = std::min(kAirtonMaxTemp, temp);
+  uint8_t temp = ::max(kAirtonMinTemp, degrees);
+  temp = ::min(kAirtonMaxTemp, temp);
   if (_.Mode == kAirtonAuto) temp = kAirtonMaxTemp;  // Auto has a fixed temp.
   _.Temp = temp - kAirtonMinTemp;
 }

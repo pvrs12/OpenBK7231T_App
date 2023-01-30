@@ -7,7 +7,7 @@
 #define IRRECV_H_
 
 #ifndef UNIT_TEST
-#include <Arduino.h>
+//#include "String.h"
 #endif
 #include <stddef.h>
 #define __STDC_LIMIT_MACROS

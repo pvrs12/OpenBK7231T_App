@@ -12,9 +12,9 @@ extern "C" {
 #include <user_interface.h>
 }
 #endif  // ESP8266
-#include <Arduino.h>
+#include "String.h"
 #endif  // UNIT_TEST
-#include <algorithm>
+// #include <algorithm>
 #ifdef UNIT_TEST
 #include <cassert>
 #endif  // UNIT_TEST
@@ -268,7 +268,7 @@ IRrecv::IRrecv(const uint16_t recvpin, const uint16_t bufsize,
                const uint8_t timeout, const bool save_buffer,
                const uint8_t timer_num) {
   // Ensure we use a valid timer number.
-  _timer_num = std::min(timer_num,
+  _timer_num = ::min(timer_num,
                         (uint8_t)(
 #ifdef SOC_TIMER_GROUP_TOTAL_TIMERS
                                   SOC_TIMER_GROUP_TOTAL_TIMERS - 1));
@@ -295,7 +295,7 @@ IRrecv::IRrecv(const uint16_t recvpin, const uint16_t bufsize,
   params.bufsize = bufsize;
   // Ensure we are going to be able to store all possible values in the
   // capture buffer.
-  params.timeout = std::min(timeout, (uint8_t)kMaxTimeoutMs);
+  params.timeout = ::min(timeout, (uint8_t)kMaxTimeoutMs);
   params.rawbuf = new uint16_t[bufsize];
   if (params.rawbuf == NULL) {
     DPRINTLN(
@@ -474,7 +474,7 @@ void IRrecv::setUnknownThreshold(const uint16_t length) {
 /// Set the base tolerance percentage for matching incoming IR messages.
 /// @param[in] percent An integer percentage. (0-100)
 void IRrecv::setTolerance(const uint8_t percent) {
-  _tolerance = std::min(percent, (uint8_t)100);
+  _tolerance = ::min(percent, (uint8_t)100);
 }
 
 /// Get the base tolerance percentage for matching incoming IR messages.
@@ -1207,7 +1207,7 @@ uint8_t IRrecv::_validTolerance(const uint8_t percentage) {
 uint32_t IRrecv::ticksLow(const uint32_t usecs, const uint8_t tolerance,
                           const uint16_t delta) {
   // max() used to ensure the result can't drop below 0 before the cast.
-  return ((uint32_t)std::max(
+  return ((uint32_t)::max(
       (int32_t)(usecs * (1.0 - _validTolerance(tolerance) / 100.0) - delta),
       (int32_t)0));
 }
@@ -1271,7 +1271,7 @@ bool IRrecv::matchAtLeast(uint32_t measured, uint32_t desired,
   DPRINT(". Matching: ");
   DPRINT(measured);
   DPRINT(" >= ");
-  DPRINT(ticksLow(std::min(desired, (uint32_t)MS_TO_USEC(params.timeout)),
+  DPRINT(ticksLow(::min(desired, (uint32_t)MS_TO_USEC(params.timeout)),
                   tolerance, delta));
   DPRINT(" [min(");
   DPRINT(ticksLow(desired, tolerance, delta));
@@ -1292,7 +1292,7 @@ bool IRrecv::matchAtLeast(uint32_t measured, uint32_t desired,
   // We really should never get a value of 0, except as the last value
   // in the buffer. If that is the case, then assume infinity and return true.
   if (measured == 0) return true;
-  return measured >= ticksLow(std::min(desired,
+  return measured >= ticksLow(::min(desired,
                                        (uint32_t)MS_TO_USEC(params.timeout)),
                               tolerance, delta);
 }

@@ -18,11 +18,11 @@
 
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"
-
+#include "minmax.h"
 
 // Constants
 const uint16_t kLutronTick = 2288;
@@ -96,7 +96,7 @@ bool IRrecv::decodeLutron(decode_results *results, uint16_t offset,
           break;  // We've likely reached the end of a message.
       }
       // Remove a bit length from the current entry.
-      entry = std::max(entry, (uint16_t)(kLutronTick / kRawTick)) -
+      entry = ::max(entry, (uint16_t)(kLutronTick / kRawTick)) -
               kLutronTick / kRawTick;
     }
     if (offset % 2 && !match(entry, kLutronDelta, 0, kLutronDelta)) {

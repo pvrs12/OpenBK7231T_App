@@ -30,7 +30,7 @@
 #define IR_SHARP_H_
 
 #ifndef UNIT_TEST
-#include <Arduino.h>
+#include "String.h"
 #endif
 #include "IRrecv.h"
 #include "IRremoteESP8266.h"

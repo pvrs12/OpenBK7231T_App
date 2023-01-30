@@ -5,12 +5,13 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1238
 
 #include "ir_Voltas.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addModelToString;
@@ -248,8 +249,8 @@ stdAc::opmode_t IRVoltas::toCommonMode(const uint8_t mode) {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRVoltas::setTemp(const uint8_t temp) {
-  uint8_t new_temp = std::max(kVoltasMinTemp, temp);
-  new_temp = std::min(kVoltasMaxTemp, new_temp);
+  uint8_t new_temp = ::max(kVoltasMinTemp, temp);
+  new_temp = ::min(kVoltasMaxTemp, new_temp);
   _.Temp = new_temp - kVoltasMinTemp;
 }
 
@@ -413,7 +414,7 @@ bool IRVoltas::getSleep(void) const { return _.Sleep; }
 /// Get the value of the On Timer time.
 /// @return Number of minutes before the timer activates.
 uint16_t IRVoltas::getOnTime(void) const {
-  return std::min((unsigned)(12 * _.OnTimer12Hr + _.OnTimerHrs - 1), 23U) * 60 +
+  return ::min((unsigned)(12 * _.OnTimer12Hr + _.OnTimerHrs - 1), 23U) * 60 +
       _.OnTimerMins;
 }
 
@@ -422,7 +423,7 @@ uint16_t IRVoltas::getOnTime(void) const {
 /// 0 disables the timer. Max is 23 hrs & 59 mins (1439 mins)
 void IRVoltas::setOnTime(const uint16_t nr_of_mins) {
   // Cap the total number of mins.
-  uint16_t mins = std::min(nr_of_mins, (uint16_t)(23 * 60 + 59));
+  uint16_t mins = ::min(nr_of_mins, (uint16_t)(23 * 60 + 59));
   uint16_t hrs = (mins / 60) + 1;
   _.OnTimerMins = mins % 60;
   _.OnTimer12Hr = hrs / 12;
@@ -433,7 +434,7 @@ void IRVoltas::setOnTime(const uint16_t nr_of_mins) {
 /// Get the value of the On Timer time.
 /// @return Number of minutes before the timer activates.
 uint16_t IRVoltas::getOffTime(void) const {
-  return std::min((unsigned)(12 * _.OffTimer12Hr + _.OffTimerHrs - 1), 23U) *
+  return ::min((unsigned)(12 * _.OffTimer12Hr + _.OffTimerHrs - 1), 23U) *
       60 + _.OffTimerMins;
 }
 
@@ -442,7 +443,7 @@ uint16_t IRVoltas::getOffTime(void) const {
 /// 0 disables the timer. Max is 23 hrs & 59 mins (1439 mins)
 void IRVoltas::setOffTime(const uint16_t nr_of_mins) {
   // Cap the total number of mins.
-  uint16_t mins = std::min(nr_of_mins, (uint16_t)(23 * 60 + 59));
+  uint16_t mins = ::min(nr_of_mins, (uint16_t)(23 * 60 + 59));
   uint16_t hrs = (mins / 60) + 1;
   _.OffTimerMins = mins % 60;
   _.OffTimer12Hr = hrs / 12;

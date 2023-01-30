@@ -9,7 +9,7 @@
 // Supports:
 //   Brand: Whynter,  Model: ARC-110WD A/C
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

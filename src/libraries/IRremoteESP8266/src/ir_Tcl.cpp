@@ -4,10 +4,10 @@
 /// @brief Support for TCL protocols.
 
 #include "ir_Tcl.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
@@ -173,7 +173,7 @@ uint8_t* IRTcl112Ac::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRTcl112Ac::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length, kTcl112AcStateLength));
+  std::memcpy(_.raw, new_code, ::min(length, kTcl112AcStateLength));
 }
 
 /// Set the requested power state of the A/C to on.
@@ -220,8 +220,8 @@ void IRTcl112Ac::setMode(const uint8_t mode) {
 /// @note The temperature resolution is 0.5 of a degree.
 void IRTcl112Ac::setTemp(const float celsius) {
   // Make sure we have desired temp in the correct range.
-  float safecelsius = std::max(celsius, kTcl112AcTempMin);
-  safecelsius = std::min(safecelsius, kTcl112AcTempMax);
+  float safecelsius = ::max(celsius, kTcl112AcTempMin);
+  safecelsius = ::min(safecelsius, kTcl112AcTempMax);
   // Convert to integer nr. of half degrees.
   uint8_t nrHalfDegrees = safecelsius * 2;
   // Do we have a half degree celsius?
@@ -352,7 +352,7 @@ uint16_t IRTcl112Ac::getOnTimer(void) const {
 /// @param[in] mins Nr. of minutes the timer is to be set to.
 /// @note Rounds down to 20 min increments. (max: 720 mins (12h), 0 is Off)
 void IRTcl112Ac::setOnTimer(const uint16_t mins) {
-  _.OnTimer = std::min(mins, kTcl112AcTimerMax) / kTcl112AcTimerResolution;
+  _.OnTimer = ::min(mins, kTcl112AcTimerMax) / kTcl112AcTimerResolution;
   _.OnTimerEnabled = _.OnTimer > 0;
   _.TimerIndicator = _.OnTimerEnabled || _.OffTimerEnabled;
 }
@@ -367,7 +367,7 @@ uint16_t IRTcl112Ac::getOffTimer(void) const {
 /// @param[in] mins Nr. of minutes the timer is to be set to.
 /// @note Rounds down to 20 min increments. (max: 720 mins (12h), 0 is Off)
 void IRTcl112Ac::setOffTimer(const uint16_t mins) {
-  _.OffTimer = std::min(mins, kTcl112AcTimerMax) / kTcl112AcTimerResolution;
+  _.OffTimer = ::min(mins, kTcl112AcTimerMax) / kTcl112AcTimerResolution;
   _.OffTimerEnabled = _.OffTimer > 0;
   _.TimerIndicator = _.OnTimerEnabled || _.OffTimerEnabled;
 }

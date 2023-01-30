@@ -9,15 +9,16 @@
 
 
 #include "ir_Argo.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cmath>
 #include <cstring>
 #ifndef UNIT_TEST
-#include <Arduino.h>
+#include "String.h"
 #endif  // UNIT_TEST
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 // using SPACE modulation. MARK is always const 400u
@@ -62,7 +63,7 @@ using irutils::addTimerModeToString;
 /// @note Consider removing this param (default to true) if WREM-2 works w/ it
 void IRsend::sendArgo(const unsigned char data[], const uint16_t nbytes,
                       const uint16_t repeat, bool sendFooter /*= false*/) {
-  if (nbytes < std::min({kArgo3AcControlStateLength,
+  if (nbytes < ::min({kArgo3AcControlStateLength,
                          kArgo3ConfigStateLength,
                          kArgo3iFeelReportStateLength,
                          kArgo3TimerStateLength,
@@ -508,7 +509,7 @@ void IRArgoACBase<ArgoProtocolWREM3>::send(const uint16_t repeat) {
 /// @param[in] degrees The temperature in degrees celsius.
 /// @param[in] repeat Nr. of times the message will be repeated.
 void IRArgoAC::sendSensorTemp(const uint8_t degrees, const uint16_t repeat) {
-  const uint8_t temp = std::max(std::min(degrees, kArgoMaxRoomTemp),
+  const uint8_t temp = ::max(::min(degrees, kArgoMaxRoomTemp),
                                 kArgoTempDelta) - kArgoTempDelta;
   const uint8_t check = kArgoSensorCheck + temp;
 
@@ -531,7 +532,7 @@ void IRArgoAC::sendSensorTemp(const uint8_t degrees, const uint16_t repeat) {
 /// @param[in] repeat Nr. of times the message will be repeated.
 void IRArgoAC_WREM3::sendSensorTemp(const uint8_t degrees,
     const uint16_t repeat) {
-  const uint8_t temp = std::max(std::min(degrees, kArgoMaxRoomTemp),
+  const uint8_t temp = ::max(::min(degrees, kArgoMaxRoomTemp),
                                 kArgoTempDelta) - kArgoTempDelta;
   ArgoProtocolWREM3 data = {};
   _stateReset(&data, argoIrMessageType_t::IFEEL_TEMP_REPORT);
@@ -640,9 +641,9 @@ bool IRArgoACBase<T>::getMax(void) const { return _.Max; }
 /// @note Sending 0 equals +4
 template<typename T>
 void IRArgoACBase<T>::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kArgoMinTemp, degrees);
+  uint8_t temp = ::max(kArgoMinTemp, degrees);
   // delta 4 degrees. "If I want 12 degrees, I need to send 8"
-  temp = std::min(kArgoMaxTemp, temp) - kArgoTempDelta;
+  temp = ::min(kArgoMaxTemp, temp) - kArgoTempDelta;
   // mask out bits
   _.Temp = temp;
 }
@@ -756,7 +757,7 @@ void IRArgoACBase<ArgoProtocolWREM3>::setFan(argoFan_t fan) {
 /// @deprecated
 /// @param[in] fan The desired setting.
 void IRArgoAC::setFan(const uint8_t fan) {
-  _.Fan = std::min(fan, kArgoFan3);
+  _.Fan = ::min(fan, kArgoFan3);
 }
 
 /// Get the current fan speed setting.
@@ -972,7 +973,7 @@ bool IRArgoAC_WREM3::getLight(void) const { return _.Light; }
 /// @brief Set the IR channel on which to communicate
 /// @param[in] channel The desired IR channel.
 void IRArgoAC_WREM3::setChannel(const uint8_t channel) {
-  _.IrChannel = std::min(channel, kArgoMaxChannel);
+  _.IrChannel = ::min(channel, kArgoMaxChannel);
 }
 
 /// @brief Get the currently set transmission channel
@@ -1024,8 +1025,8 @@ argoIrMessageType_t IRArgoACBase<T>::getMessageType(void) const {
 /// @param[in] degrees The temperature in degrees celsius.
 template<typename T>
 void IRArgoACBase<T>::setSensorTemp(const uint8_t degrees) {
-  uint8_t temp = std::min(degrees, kArgoMaxRoomTemp);
-  temp = std::max(temp, kArgoTempDelta) - kArgoTempDelta;
+  uint8_t temp = ::min(degrees, kArgoMaxRoomTemp);
+  temp = ::max(temp, kArgoTempDelta) - kArgoTempDelta;
   if (getMessageType() == argoIrMessageType_t::IFEEL_TEMP_REPORT) {
     _.SensorT = temp;
   } else {
@@ -1394,7 +1395,7 @@ String IRArgoAC::toString(void) const {
 ///        E.g. 13:38 becomes 818 (13*60+38)
 /// @param currentTimeMinutes Current time (in minutes)
 void IRArgoAC_WREM3::setCurrentTimeMinutes(uint16_t currentTimeMinutes) {
-  uint16_t time = std::min(currentTimeMinutes, static_cast<uint16_t>(23*60+59));
+  uint16_t time = ::min(currentTimeMinutes, static_cast<uint16_t>(23*60+59));
   _.timer.CurrentTimeHi = (time >> 4);
   _.timer.CurrentTimeLo = (time & 0b1111);
 }
@@ -1408,7 +1409,7 @@ uint16_t IRArgoAC_WREM3::getCurrentTimeMinutes(void) const {
 /// @brief Set current day of week
 /// @param dayOfWeek Current day of week
 void IRArgoAC_WREM3::setCurrentDayOfWeek(argoWeekday dayOfWeek) {
-  uint8_t day = std::min(to_underlying(dayOfWeek),
+  uint8_t day = ::min(to_underlying(dayOfWeek),
                          to_underlying(argoWeekday::SATURDAY));
   _.timer.CurrentWeekdayHi = (day >> 1);
   _.timer.CurrentWeekdayLo = (day & 0b1);
@@ -1452,7 +1453,7 @@ argoTimerType_t IRArgoAC_WREM3::getTimerType(void) const {
 /// @param delayMinutes Delay minutes
 void IRArgoAC_WREM3::setDelayTimerMinutes(const uint16_t delayMinutes) {
   const uint16_t DELAY_TIMER_MAX = 19*60+50;
-  uint16_t time = std::min(delayMinutes, DELAY_TIMER_MAX);
+  uint16_t time = ::min(delayMinutes, DELAY_TIMER_MAX);
 
   // only full 10 minute increments are allowed
   time = static_cast<uint16_t>((time / 10.0) + 0.5) * 10;
@@ -1476,7 +1477,7 @@ uint16_t IRArgoAC_WREM3::getDelayTimerMinutes(void) const {
 void IRArgoAC_WREM3::setScheduleTimerStartMinutes(
     const uint16_t startTimeMinutes) {
   const uint16_t SCHEDULE_TIMER_MAX = 23*60+50;
-  uint16_t time = std::min(startTimeMinutes, SCHEDULE_TIMER_MAX);
+  uint16_t time = ::min(startTimeMinutes, SCHEDULE_TIMER_MAX);
 
   // only full 10 minute increments are allowed
   time = static_cast<uint16_t>((time / 10.0) + 0.5) * 10;
@@ -1500,7 +1501,7 @@ uint16_t IRArgoAC_WREM3::getScheduleTimerStartMinutes(void) const {
 void IRArgoAC_WREM3::setScheduleTimerStopMinutes(
     const uint16_t stopTimeMinutes) {
   const uint16_t SCHEDULE_TIMER_MAX = 23*60+50;
-  uint16_t time = std::min(stopTimeMinutes, SCHEDULE_TIMER_MAX);
+  uint16_t time = ::min(stopTimeMinutes, SCHEDULE_TIMER_MAX);
 
   // only full 10 minute increments are allowed
   time = static_cast<uint16_t>((time / 10.0) + 0.5) * 10;
@@ -1780,7 +1781,7 @@ bool IRArgoAC_WREM3::isValidWrem3Message(const uint8_t state[],
   if ((nbits % 8) != 0) {
     return false;  // WREM-3 protocol always has a full byte length commands
   }
-  uint16_t stateLengthBytes = std::min(static_cast<uint16_t>(nbits / 8),
+  uint16_t stateLengthBytes = ::min(static_cast<uint16_t>(nbits / 8),
                                        kStateSizeMax);
   if (!IRArgoAC_WREM3::hasValidPreamble(state, stateLengthBytes)) {
     return false;

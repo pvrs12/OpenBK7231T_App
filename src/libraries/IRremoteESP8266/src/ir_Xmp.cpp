@@ -10,10 +10,11 @@
 //   Brand: Xfinity,  Model: XR11 remote
 
 
-#include <algorithm>
+//// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kXmpMark =          210;  ///< uSeconds.

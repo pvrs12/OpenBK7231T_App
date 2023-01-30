@@ -7,7 +7,7 @@
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
-#include <algorithm>
+// #include <algorithm>
 
 using irutils::addBoolToString;
 using irutils::addModeToString;
@@ -196,8 +196,8 @@ void IRDelonghiAc::setTemp(const uint8_t degrees, const bool fahrenheit,
       temp_min = kDelonghiAcTempMinF;
       temp_max = kDelonghiAcTempMaxF;
     }
-    temp = std::max(temp_min, degrees);
-    temp = std::min(temp_max, temp);
+    temp = ::max(temp_min, degrees);
+    temp = ::min(temp_max, temp);
     _saved_temp = temp;
     _saved_temp_units = fahrenheit;
     temp = temp - temp_min + 1;
@@ -376,7 +376,7 @@ bool IRDelonghiAc::getOnTimerEnabled(void) const {
 /// @param[in] nr_of_mins Total nr of mins to wait before waking the device.
 /// @note Max 23 hrs and 59 minutes. i.e. 1439 mins.
 void IRDelonghiAc::setOnTimer(const uint16_t nr_of_mins) {
-  uint16_t value = std::min(kDelonghiAcTimerMax, nr_of_mins);
+  uint16_t value = ::min(kDelonghiAcTimerMax, nr_of_mins);
   _.OnMins =  value % 60;
   _.OnHours =  value / 60;
   // Enable or not?
@@ -405,7 +405,7 @@ bool IRDelonghiAc::getOffTimerEnabled(void) const {
 /// @param[in] nr_of_mins Total nr of mins to wait before turning off the device
 /// @note Max 23 hrs and 59 minutes. i.e. 1439 mins.
 void IRDelonghiAc::setOffTimer(const uint16_t nr_of_mins) {
-  uint16_t value = std::min(kDelonghiAcTimerMax, nr_of_mins);
+  uint16_t value = ::min(kDelonghiAcTimerMax, nr_of_mins);
   _.OffMins = value % 60;
   _.OffHours = value / 60;
   // Enable or not?

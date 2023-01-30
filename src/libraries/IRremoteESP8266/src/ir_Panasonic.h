@@ -33,9 +33,9 @@
 
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
-#ifdef ARDUINO
-#include <Arduino.h>
-#endif
+//#ifdef ARDUINO
+#include "String.h"
+//#endif
 #include "IRremoteESP8266.h"
 #include "IRsend.h"
 #ifdef UNIT_TEST
@@ -164,7 +164,7 @@ class IRPanasonicAc {
   static stdAc::swingv_t toCommonSwingV(const uint8_t pos);
   static stdAc::swingh_t toCommonSwingH(const uint8_t pos);
   stdAc::state_t toCommon(void);
-  String toString(void);
+  arduino::String toString(void);
 #ifndef UNIT_TEST
 
  private:

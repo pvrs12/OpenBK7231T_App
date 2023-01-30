@@ -7,7 +7,7 @@
 // Supports:
 //   Brand: Lixil,  Model: Inax DT-BA283 Toilet
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

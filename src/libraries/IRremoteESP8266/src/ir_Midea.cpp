@@ -9,14 +9,17 @@
 
 #include "ir_Midea.h"
 #include "ir_NEC.h"
-#include <algorithm>
-#ifndef ARDUINO
-#include <string>
-#endif
+// #include <algorithm>
+//#ifndef ARDUINO
+#include "String.h"
+//#endif
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
+
+using arduino::String;
 
 // Constants
 const uint16_t kMideaTick = 80;
@@ -210,7 +213,7 @@ void IRMideaAC::setTemp(const uint8_t temp, const bool useCelsius) {
     max_temp = kMideaACMaxTempC;
     min_temp = kMideaACMinTempC;
   }
-  uint8_t new_temp = std::min(max_temp, std::max(min_temp, temp));
+  uint8_t new_temp = ::min(max_temp, ::max(min_temp, temp));
   if (!_.useFahrenheit && !useCelsius)  // Native is in C, new_temp is in F
     new_temp = fahrenheitToCelsius(new_temp) - kMideaACMinTempC;
   else if (_.useFahrenheit && useCelsius)  // Native is in F, new_temp is in C
@@ -246,7 +249,7 @@ void IRMideaAC::setSensorTemp(const uint8_t temp, const bool useCelsius) {
     max_temp = kMideaACMaxSensorTempC;
     min_temp = kMideaACMinSensorTempC;
   }
-  uint8_t new_temp = std::min(max_temp, std::max(min_temp, temp));
+  uint8_t new_temp = ::min(max_temp, ::max(min_temp, temp));
   if (!_.useFahrenheit && !useCelsius)  // Native is in C, new_temp is in F
     new_temp = fahrenheitToCelsius(new_temp) - kMideaACMinSensorTempC;
   else if (_.useFahrenheit && useCelsius)  // Native is in F, new_temp is in C
@@ -566,7 +569,7 @@ uint16_t IRMideaAC::getOnTimer(void) const {
 ///          Setting it will disable that mode/settings.
 void IRMideaAC::setOnTimer(const uint16_t mins) {
   setEnableSensorTemp(false);
-  uint8_t halfhours = std::min((uint16_t)(24 * 60), mins) / 30;
+  uint8_t halfhours = ::min((uint16_t)(24 * 60), mins) / 30;
   if (halfhours)
     _.SensorTemp = ((halfhours - 1) << 1) | 1;
   else
@@ -589,7 +592,7 @@ uint16_t IRMideaAC::getOffTimer(void) const { return _.OffTimer * 30 + 30; }
 ///       of the actual device/protocol.
 /// @note A value of less than 30 will disable the Timer.
 void IRMideaAC::setOffTimer(const uint16_t mins) {
-  uint8_t halfhours = std::min((uint16_t)(24 * 60), mins) / 30;
+  uint8_t halfhours = ::min((uint16_t)(24 * 60), mins) / 30;
   if (halfhours)
     _.OffTimer = halfhours - 1;
   else

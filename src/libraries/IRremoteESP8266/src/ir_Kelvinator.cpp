@@ -15,10 +15,10 @@
 ///    - Fahrenheit.
 
 #include "ir_Kelvinator.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRac.h"
 #include "IRrecv.h"
@@ -214,8 +214,8 @@ bool IRKelvinatorAC::getPower(void) const {
 /// Set the temperature setting.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRKelvinatorAC::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kKelvinatorMinTemp, degrees);
-  temp = std::min(kKelvinatorMaxTemp, temp);
+  uint8_t temp = ::max(kKelvinatorMinTemp, degrees);
+  temp = ::min(kKelvinatorMaxTemp, temp);
   _.Temp = temp - kKelvinatorMinTemp;
 }
 
@@ -228,12 +228,12 @@ uint8_t IRKelvinatorAC::getTemp(void) const {
 /// Set the speed of the fan.
 /// @param[in] speed 0 is auto, 1-5 is the speed
 void IRKelvinatorAC::setFan(const uint8_t speed) {
-  uint8_t fan = std::min(kKelvinatorFanMax, speed);  // Bounds check
+  uint8_t fan = ::min(kKelvinatorFanMax, speed);  // Bounds check
 
   // Only change things if we need to.
   if (fan != _.Fan) {
     // Set the basic fan values.
-    _.BasicFan = std::min(kKelvinatorBasicFanMax, fan);
+    _.BasicFan = ::min(kKelvinatorBasicFanMax, fan);
     // Set the advanced(?) fan value.
     _.Fan = fan;
     // Turbo mode is turned off if we change the fan settings.

@@ -8,7 +8,7 @@
 // Supports:
 //   Brand: Disney,  Model: Made With Magic (Glow With The Show) wand
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

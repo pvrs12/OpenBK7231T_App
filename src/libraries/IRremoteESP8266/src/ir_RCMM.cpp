@@ -7,11 +7,12 @@
 // Supports:
 //   Brand: Microsoft,  Model: XBOX 360
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtimer.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kRcmmTick = 28;  // Technically it would be 27.777*
@@ -79,7 +80,7 @@ void IRsend::sendRCMM(uint64_t data, uint16_t nbits, uint16_t repeat) {
     mark(kRcmmBitMark);
     // Protocol requires us to wait at least kRcmmRptLength usecs from the
     // start or kRcmmMinGap usecs.
-    space(std::max(kRcmmRptLength - usecs.elapsed(), kRcmmMinGap));
+    space(::max(kRcmmRptLength - usecs.elapsed(), kRcmmMinGap));
   }
 }
 #endif  // SEND_RCMM
@@ -102,7 +103,7 @@ bool IRrecv::decodeRCMM(decode_results *results, uint16_t offset,
 
   // Calc the maximum size in bits, the message can be, or that we can accept.
   int16_t maxBitSize =
-      std::min((uint16_t)results->rawlen - 5, (uint16_t)sizeof(data) * 8);
+      ::min((uint16_t)results->rawlen - 5, (uint16_t)sizeof(data) * 8);
   // Compliance
   if (strict) {
     // Technically the spec says bit sizes should be 12 xor 24. however

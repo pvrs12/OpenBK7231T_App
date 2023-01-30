@@ -10,7 +10,7 @@
 // Supports:
 //   Brand: JVC,  Model: PTU94023B remote
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtimer.h"

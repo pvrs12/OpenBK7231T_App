@@ -9,12 +9,13 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1260
 
 #include "ir_Neoclima.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kNeoclimaHdrMark = 6112;
@@ -122,7 +123,7 @@ uint8_t *IRNeoclimaAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRNeoclimaAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length, kNeoclimaStateLength));
+  std::memcpy(_.raw, new_code, ::min(length, kNeoclimaStateLength));
 }
 
 /// Set the Button/Command pressed setting of the A/C.
@@ -241,7 +242,7 @@ void IRNeoclimaAc::setTemp(const uint8_t temp, const bool celsius) {
   _.UseFah = !celsius;
   const uint8_t min_temp = celsius ? kNeoclimaMinTempC : kNeoclimaMinTempF;
   const uint8_t max_temp = celsius ? kNeoclimaMaxTempC : kNeoclimaMaxTempF;
-  const uint8_t newtemp = std::min(max_temp, std::max(min_temp, temp));
+  const uint8_t newtemp = ::min(max_temp, ::max(min_temp, temp));
   if (oldtemp > newtemp)
     _.Button = kNeoclimaButtonTempDown;
   else if (newtemp > oldtemp)

@@ -24,10 +24,10 @@
 /// @see Daikin200 https://github.com/crankyoldgit/IRremoteESP8266/issues/1802
 
 #include "ir_Daikin.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRremoteESP8266.h"
@@ -37,6 +37,7 @@
 #endif
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addDayToString;
@@ -222,8 +223,8 @@ bool IRDaikinESP::getPower(void) const {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRDaikinESP::setTemp(const uint8_t temp) {
-  uint8_t degrees = std::max(temp, kDaikinMinTemp);
-  degrees = std::min(degrees, kDaikinMaxTemp);
+  uint8_t degrees = ::max(temp, kDaikinMinTemp);
+  degrees = ::min(degrees, kDaikinMaxTemp);
   _.Temp = degrees;
 }
 
@@ -824,10 +825,10 @@ void IRDaikin2::setMode(const uint8_t desired_mode) {
 /// @param[in] desired The temperature in degrees celsius.
 void IRDaikin2::setTemp(const uint8_t desired) {
   // The A/C has a different min temp if in cool mode.
-  uint8_t temp = std::max(
+  uint8_t temp = ::max(
       (_.Mode == kDaikinCool) ? kDaikin2MinCoolTemp : kDaikinMinTemp,
       desired);
-  _.Temp = std::min(kDaikinMaxTemp, temp);
+  _.Temp = ::min(kDaikinMaxTemp, temp);
   // If the humidity setting is in use, the temp is a fixed value.
   if (_.HumidOn) _.Temp = kDaikinMaxTemp;
 }
@@ -1530,8 +1531,8 @@ uint8_t IRDaikin216::convertMode(const stdAc::opmode_t mode) {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRDaikin216::setTemp(const uint8_t temp) {
-  uint8_t degrees = std::max(temp, kDaikinMinTemp);
-  degrees = std::min(degrees, kDaikinMaxTemp);
+  uint8_t degrees = ::max(temp, kDaikinMinTemp);
+  degrees = ::min(degrees, kDaikinMaxTemp);
   _.Temp = degrees;
 }
 
@@ -1872,8 +1873,8 @@ uint8_t IRDaikin160::convertMode(const stdAc::opmode_t mode) {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRDaikin160::setTemp(const uint8_t temp) {
-  uint8_t degrees = std::max(temp, kDaikinMinTemp);
-  degrees = std::min(degrees, kDaikinMaxTemp) - 10;
+  uint8_t degrees = ::max(temp, kDaikinMinTemp);
+  degrees = ::min(degrees, kDaikinMaxTemp) - 10;
   _.Temp = degrees;
 }
 
@@ -2258,7 +2259,7 @@ stdAc::opmode_t IRDaikin176::toCommonMode(const uint8_t mode) {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRDaikin176::setTemp(const uint8_t temp) {
-  uint8_t degrees = std::min(kDaikinMaxTemp, std::max(temp, kDaikinMinTemp));
+  uint8_t degrees = ::min(kDaikinMaxTemp, ::max(temp, kDaikinMinTemp));
   _saved_temp = degrees;
   switch (_.Mode) {
     case kDaikin176Dry:
@@ -2636,8 +2637,8 @@ stdAc::opmode_t IRDaikin128::toCommonMode(const uint8_t mode) {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRDaikin128::setTemp(const uint8_t temp) {
-  _.Temp = uint8ToBcd(std::min(kDaikin128MaxTemp,
-                              std::max(temp, kDaikin128MinTemp)));
+  _.Temp = uint8ToBcd(::min(kDaikin128MaxTemp,
+                              ::max(temp, kDaikin128MinTemp)));
 }
 
 /// Get the current temperature setting.
@@ -3164,9 +3165,9 @@ uint8_t IRDaikin152::convertMode(const stdAc::opmode_t mode) {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRDaikin152::setTemp(const uint8_t temp) {
-  uint8_t degrees = std::max(
+  uint8_t degrees = ::max(
       temp, (_.Mode == kDaikinHeat) ? kDaikinMinTemp : kDaikin2MinCoolTemp);
-  degrees = std::min(degrees, kDaikinMaxTemp);
+  degrees = ::min(degrees, kDaikinMaxTemp);
   if (temp == kDaikin152FanTemp) degrees = temp;  // Handle fan only temp.
   _.Temp = degrees;
 }
@@ -3477,8 +3478,8 @@ bool IRDaikin64::getPowerToggle(void) const { return _.Power; }
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRDaikin64::setTemp(const uint8_t temp) {
-  uint8_t degrees = std::max(temp, kDaikin64MinTemp);
-  degrees = std::min(degrees, kDaikin64MaxTemp);
+  uint8_t degrees = ::max(temp, kDaikin64MinTemp);
+  degrees = ::min(degrees, kDaikin64MaxTemp);
   _.Temp = uint8ToBcd(degrees);
 }
 

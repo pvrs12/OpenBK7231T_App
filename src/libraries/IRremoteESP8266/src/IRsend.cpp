@@ -4,16 +4,37 @@
 
 #include "IRsend.h"
 #ifndef UNIT_TEST
-#include <Arduino.h>
+#include "String.h"
+#include "minmax.h"
 #else
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 #endif
-#include <algorithm>
+// #include <algorithm>
 #ifdef UNIT_TEST
 #include <cmath>
 #endif
 #include "IRtimer.h"
+
+#if PLATFORM_BEKEN
+//TODO
+#endif
+
+//TODO: check these?
+typedef enum {
+  LOW     = 0,
+  HIGH    = 1,
+  CHANGE  = 2,
+  FALLING = 3,
+  RISING  = 4,
+} PinStatus;
+
+typedef enum {
+  INPUT           = 0x0,
+  OUTPUT          = 0x1,
+  INPUT_PULLUP    = 0x2,
+  INPUT_PULLDOWN  = 0x3,
+} PinMode;
 
 /// Constructor for an IRsend object.
 /// @param[in] IRsendPin Which GPIO pin to use when sending an IR command.
@@ -44,7 +65,7 @@ IRsend::IRsend(uint16_t IRsendPin, bool inverted, bool use_modulation)
 /// Enable the pin for output.
 void IRsend::begin() {
 #ifndef UNIT_TEST
-  pinMode(IRpin, OUTPUT);
+//  pinMode(IRpin, OUTPUT);
 #endif
   ledOff();  // Ensure the LED is in a known safe state when we start.
 }
@@ -52,14 +73,14 @@ void IRsend::begin() {
 /// Turn off the IR LED.
 void IRsend::ledOff() {
 #ifndef UNIT_TEST
-  digitalWrite(IRpin, outputOff);
+ // digitalWrite(IRpin, outputOff);
 #endif
 }
 
 /// Turn on the IR LED.
 void IRsend::ledOn() {
 #ifndef UNIT_TEST
-  digitalWrite(IRpin, outputOn);
+//  digitalWrite(IRpin, outputOn);
 #endif
 }
 
@@ -74,9 +95,9 @@ uint32_t IRsend::calcUSecPeriod(uint32_t hz, bool use_offset) {
       (1000000UL + hz / 2) / hz;  // The equiv of round(1000000/hz).
   // Apply the offset and ensure we don't result in a <= 0 value.
   if (use_offset)
-    return std::max((uint32_t)1, period + periodOffset);
+    return ::max((uint32_t)1, period + periodOffset);
   else
-    return std::max((uint32_t)1, period);
+    return ::max((uint32_t)1, period);
 }
 
 /// Set the output frequency modulation and duty cycle.
@@ -92,7 +113,7 @@ uint32_t IRsend::calcUSecPeriod(uint32_t hz, bool use_offset) {
 void IRsend::enableIROut(uint32_t freq, uint8_t duty) {
   // Set the duty cycle to use if we want freq. modulation.
   if (modulation) {
-    _dutycycle = std::min(duty, kDutyMax);
+    _dutycycle = ::min(duty, kDutyMax);
   } else {
     _dutycycle = kDutyMax;
   }
@@ -116,14 +137,14 @@ void IRsend::_delayMicroseconds(uint32_t usec) {
   // Ref: https://www.arduino.cc/en/Reference/delayMicroseconds
   if (usec <= kMaxAccurateUsecDelay) {
 #ifndef UNIT_TEST
-    delayMicroseconds(usec);
+//    delayMicroseconds(usec);
 #endif
   } else {
 #ifndef UNIT_TEST
     // Invoke a delay(), where possible, to avoid triggering the WDT.
-    delay(usec / 1000UL);  // Delay for as many whole milliseconds as we can.
+//    delay(usec / 1000UL);  // Delay for as many whole milliseconds as we can.
     // Delay the remaining sub-millisecond.
-    delayMicroseconds(static_cast<uint16_t>(usec % 1000UL));
+//    delayMicroseconds(static_cast<uint16_t>(usec % 1000UL));
 #endif
   }
 }
@@ -174,14 +195,14 @@ uint16_t IRsend::mark(uint16_t usec) {
     ledOn();
     // Calculate how long we should pulse on for.
     // e.g. Are we to close to the end of our requested mark time (usec)?
-    _delayMicroseconds(std::min((uint32_t)onTimePeriod, usec - elapsed));
+    _delayMicroseconds(::min((uint32_t)onTimePeriod, usec - elapsed));
     ledOff();
     counter++;
     if (elapsed + onTimePeriod >= usec)
       return counter;  // LED is now off & we've passed our allotted time.
     // Wait for the lesser of the rest of the duty cycle, or the time remaining.
     _delayMicroseconds(
-        std::min(usec - elapsed - onTimePeriod, (uint32_t)offTimePeriod));
+        ::min(usec - elapsed - onTimePeriod, (uint32_t)offTimePeriod));
     elapsed = usecTimer.elapsed();  // Update & recache the actual elapsed time.
   }
   return counter;
@@ -214,7 +235,7 @@ int8_t IRsend::calibrate(uint16_t hz) {
   uint32_t timeTaken = usecTimer.elapsed();  // Record the time it took.
   // While it shouldn't be necessary, assume at least 1 pulse, to avoid a
   // divide by 0 situation.
-  pulses = std::max(pulses, (uint16_t)1U);
+  pulses = ::max(pulses, (uint16_t)1U);
   uint32_t calcPeriod = calcUSecPeriod(hz);  // e.g. @38kHz it should be 26us.
   // Assuming 38kHz for the example calculations:
   // In a 65535us pulse, we should have 2520.5769 pulses @ 26us periods.
@@ -226,9 +247,9 @@ int8_t IRsend::calibrate(uint16_t hz) {
   //
   // Calculate the actual period from the actual time & the actual pulses
   // generated.
-  double_t actualPeriod = (double_t)timeTaken / (double_t)pulses;
+  double actualPeriod = (double)timeTaken / (double)pulses;
   // Store the difference between the actual time per period vs. calculated.
-  periodOffset = (int8_t)((double_t)calcPeriod - actualPeriod);
+  periodOffset = (int8_t)((double)calcPeriod - actualPeriod);
   return periodOffset;
 }
 
@@ -376,7 +397,7 @@ void IRsend::sendGeneric(const uint16_t headermark, const uint32_t headerspace,
     if (elapsed >= mesgtime)
       space(gap);
     else
-      space(std::max(gap, mesgtime - elapsed));
+      space(::max(gap, mesgtime - elapsed));
   }
 }
 
@@ -814,7 +835,7 @@ uint16_t IRsend::defaultBits(const decode_type_t protocol) {
 bool IRsend::send(const decode_type_t type, const uint64_t data,
                   const uint16_t nbits, const uint16_t repeat) {
   uint16_t min_repeat __attribute__((unused)) =
-      std::max(IRsend::minRepeats(type), repeat);
+      ::max(IRsend::minRepeats(type), repeat);
   switch (type) {
 #if SEND_AIRTON
     case AIRTON:

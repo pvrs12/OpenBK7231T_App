@@ -10,7 +10,7 @@
 // Supports:
 //   Brand: Pronto,  Model: Pronto Hex
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRsend.h"
 
 // Constants

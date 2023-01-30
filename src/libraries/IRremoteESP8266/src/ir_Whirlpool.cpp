@@ -9,10 +9,10 @@
 /// @note Dim == !Light, Jet == Super == Turbo
 
 #include "ir_Whirlpool.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRremoteESP8266.h"
@@ -157,7 +157,7 @@ uint8_t *IRWhirlpoolAc::getRaw(const bool calcchecksum) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRWhirlpoolAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length, kWhirlpoolAcStateLength));
+  std::memcpy(_.raw, new_code, ::min(length, kWhirlpoolAcStateLength));
 }
 
 /// Get/Detect the model of the A/C.
@@ -200,8 +200,8 @@ int8_t IRWhirlpoolAc::getTempOffset(void) const {
 void IRWhirlpoolAc::_setTemp(const uint8_t temp, const bool remember) {
   if (remember) _desiredtemp = temp;
   int8_t offset = getTempOffset();  // Cache the min temp for the model.
-  uint8_t newtemp = std::max((uint8_t)(kWhirlpoolAcMinTemp + offset), temp);
-  newtemp = std::min((uint8_t)(kWhirlpoolAcMaxTemp + offset), newtemp);
+  uint8_t newtemp = ::max((uint8_t)(kWhirlpoolAcMinTemp + offset), temp);
+  newtemp = ::min((uint8_t)(kWhirlpoolAcMaxTemp + offset), newtemp);
   _.Temp = newtemp - (kWhirlpoolAcMinTemp + offset);
 }
 

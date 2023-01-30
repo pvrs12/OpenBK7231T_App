@@ -10,7 +10,7 @@
 // Supports:
 //   Brand: Denon, Model: AVR-3801 A/V Receiver (probably)
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

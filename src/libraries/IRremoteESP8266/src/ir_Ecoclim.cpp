@@ -5,13 +5,14 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1397
 
 #include "ir_Ecoclim.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #include "IRac.h"
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint8_t  kEcoclimSections = 3;
@@ -153,8 +154,8 @@ void IREcoclimAc::setRaw(const uint64_t new_code) { _.raw = new_code; }
 /// @param[in] celsius The temperature in degrees celsius.
 void IREcoclimAc::setTemp(const uint8_t celsius) {
   // Range check.
-  uint8_t temp = std::min(celsius, kEcoclimTempMax);
-  temp = std::max(temp, kEcoclimTempMin);
+  uint8_t temp = ::min(celsius, kEcoclimTempMax);
+  temp = ::max(temp, kEcoclimTempMin);
   _.Temp = temp - kEcoclimTempMin;
 }
 
@@ -166,8 +167,8 @@ uint8_t IREcoclimAc::getTemp(void) const { return _.Temp + kEcoclimTempMin; }
 /// @param[in] celsius The temperature in degrees celsius.
 void IREcoclimAc::setSensorTemp(const uint8_t celsius) {
   // Range check.
-  uint8_t temp = std::min(celsius, kEcoclimTempMax);
-  temp = std::max(temp, kEcoclimTempMin);
+  uint8_t temp = ::min(celsius, kEcoclimTempMax);
+  temp = ::max(temp, kEcoclimTempMin);
   _.SensorTemp = temp - kEcoclimTempMin;
 }
 
@@ -198,7 +199,7 @@ uint8_t IREcoclimAc::getFan(void) const { return _.Fan; }
 /// Set the speed of the fan.
 /// @param[in] speed The desired setting.
 void IREcoclimAc::setFan(const uint8_t speed) {
-  _.Fan = std::min(speed, kEcoclimFanAuto);
+  _.Fan = ::min(speed, kEcoclimFanAuto);
 }
 
 /// Convert a stdAc::fanspeed_t enum into it's native speed.
@@ -282,7 +283,7 @@ uint16_t IREcoclimAc::getClock(void) const { return _.Clock; }
 /// Set the clock time on the A/C unit.
 /// @param[in] nr_of_mins Nr. of minutes past midnight.
 void IREcoclimAc::setClock(const uint16_t nr_of_mins) {
-  _.Clock = std::min(nr_of_mins, (uint16_t)(24 * 60 - 1));
+  _.Clock = ::min(nr_of_mins, (uint16_t)(24 * 60 - 1));
 }
 
 /// Get the Unit type/DIP switch settings of the remote.

@@ -10,7 +10,7 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1513
 
 #include "ir_LG.h"
-#include <algorithm>
+// #include <algorithm>
 #include "IRac.h"
 #include "IRrecv.h"
 #include "IRsend.h"
@@ -459,8 +459,8 @@ inline void IRLgAc::_setTemp(const uint8_t value) { _.Temp = value; }
 /// Set the temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRLgAc::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kLgAcMinTemp, degrees);
-  temp = std::min(kLgAcMaxTemp, temp);
+  uint8_t temp = ::max(kLgAcMinTemp, degrees);
+  temp = ::min(kLgAcMaxTemp, temp);
   _temp = temp;
   _setTemp(temp - kLgAcTempAdjust);
 }

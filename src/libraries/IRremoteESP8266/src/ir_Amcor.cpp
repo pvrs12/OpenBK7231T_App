@@ -6,12 +6,13 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/834
 
 #include "ir_Amcor.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kAmcorHdrMark = 8200;
@@ -172,8 +173,8 @@ bool IRAmcorAc::getPower(void) const {
 /// Set the temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRAmcorAc::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kAmcorMinTemp, degrees);
-  temp = std::min(kAmcorMaxTemp, temp);
+  uint8_t temp = ::max(kAmcorMinTemp, degrees);
+  temp = ::min(kAmcorMaxTemp, temp);
   _.Temp = temp;
 }
 

@@ -6,11 +6,8 @@
 
 
 #include "ir_Mirage.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
-#ifndef ARDUINO
-#include <string>
-#endif
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
@@ -285,8 +282,8 @@ void IRMirageAc::setMode(const uint8_t mode) {
 /// @param[in] degrees The temperature in degrees celsius.
 void IRMirageAc::setTemp(const uint8_t degrees) {
   // Make sure we have desired temp in the correct range.
-  uint8_t celsius = std::max(degrees, kMirageAcMinTemp);
-  _.Temp = std::min(celsius, kMirageAcMaxTemp) + kMirageAcTempOffset;
+  uint8_t celsius = ::max(degrees, kMirageAcMinTemp);
+  _.Temp = ::min(celsius, kMirageAcMaxTemp) + kMirageAcTempOffset;
 }
 
 /// Get the current temperature setting.
@@ -389,7 +386,7 @@ void IRMirageAc::setClock(const uint32_t nr_of_seconds) {
       _.Minutes = _.Seconds = 0;  // No clock setting. Clear it just in case.
       break;
     default:
-      uint32_t remaining = std::min(
+      uint32_t remaining = ::min(
           nr_of_seconds, (uint32_t)(24 * 60 * 60 - 1));  // Limit to 23:59:59.
       _.Seconds = uint8ToBcd(remaining % 60);
       remaining /= 60;
@@ -553,7 +550,7 @@ bool IRMirageAc::getIFeel(void) const {
 void IRMirageAc::setSensorTemp(const uint8_t degrees) {
   switch (_model) {
     case mirage_ac_remote_model_t::KKG29AC1:
-      _.SensorTemp = std::min(kMirageAcSensorTempMax, degrees) +
+      _.SensorTemp = ::min(kMirageAcSensorTempMax, degrees) +
           kMirageAcSensorTempOffset;
       break;
     default:
@@ -586,7 +583,7 @@ uint16_t IRMirageAc::getOnTimer(void) const {
 /// Set the number of minutes for the On Timer.
 /// @param[in] nr_of_mins How long to set the timer for. 0 disables the timer.
 void IRMirageAc::setOnTimer(const uint16_t nr_of_mins) {
-  uint16_t mins = std::min(nr_of_mins, (uint16_t)(24 * 60));
+  uint16_t mins = ::min(nr_of_mins, (uint16_t)(24 * 60));
   switch (_model) {
     case mirage_ac_remote_model_t::KKG29AC1:
       _.OnTimerEnable = (mins > 0);
@@ -612,7 +609,7 @@ uint16_t IRMirageAc::getOffTimer(void) const {
 /// Set the number of minutes for the Off Timer.
 /// @param[in] nr_of_mins How long to set the timer for. 0 disables the timer.
 void IRMirageAc::setOffTimer(const uint16_t nr_of_mins) {
-  uint16_t mins = std::min(nr_of_mins, (uint16_t)(24 * 60));
+  uint16_t mins = ::min(nr_of_mins, (uint16_t)(24 * 60));
   switch (_model) {
     case mirage_ac_remote_model_t::KKG29AC1:
       _.OffTimerEnable = (mins > 0);

@@ -7,7 +7,7 @@
 // Supports:
 //   Brand: Toto,  Model: Washlet Toilet NJ
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

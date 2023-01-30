@@ -13,7 +13,7 @@
 // short SHOT packets(14bits) and MSGs = 24bits. Support
 // for long MSGs > 24bits is TODO
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

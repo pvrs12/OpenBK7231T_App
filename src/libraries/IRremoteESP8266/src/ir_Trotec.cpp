@@ -7,10 +7,10 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1176
 
 #include "ir_Trotec.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef UNIT_TEST
-#include <Arduino.h>
+#include "String.h"
 #endif
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
@@ -153,7 +153,7 @@ bool IRTrotecESP::getPower(void) const {
 /// Set the speed of the fan.
 /// @param[in] fan The desired setting.
 void IRTrotecESP::setSpeed(const uint8_t fan) {
-  uint8_t speed = std::min(fan, kTrotecFanHigh);
+  uint8_t speed = ::min(fan, kTrotecFanHigh);
   _.Fan = speed;
 }
 
@@ -178,8 +178,8 @@ uint8_t IRTrotecESP::getMode(void) const {
 /// Set the temperature.
 /// @param[in] celsius The temperature in degrees celsius.
 void IRTrotecESP::setTemp(const uint8_t celsius) {
-  uint8_t temp = std::max(celsius, kTrotecMinTemp);
-  temp = std::min(temp, kTrotecMaxTemp);
+  uint8_t temp = ::max(celsius, kTrotecMinTemp);
+  temp = ::min(temp, kTrotecMaxTemp);
   _.Temp = temp - kTrotecMinTemp;
 }
 
@@ -473,7 +473,7 @@ bool IRTrotec3550::getPower(void) const { return _.Power; }
 /// Set the speed of the fan.
 /// @param[in] fan The desired setting.
 void IRTrotec3550::setFan(const uint8_t fan) {
-  uint8_t speed = std::min(fan, kTrotecFanHigh);
+  uint8_t speed = ::min(fan, kTrotecFanHigh);
   _.Fan = speed;
 }
 
@@ -502,8 +502,8 @@ void IRTrotec3550::setTemp(const uint8_t degrees, const bool celsius) {
     minTemp = kTrotec3550MinTempF;
     maxTemp = kTrotec3550MaxTempF;
   }
-  uint8_t temp = std::max(degrees, minTemp);
-  temp = std::min(temp, maxTemp);
+  uint8_t temp = ::max(degrees, minTemp);
+  temp = ::min(temp, maxTemp);
   if (celsius) {
     _.TempC = temp - minTemp;
     _.TempF = celsiusToFahrenheit(temp) - kTrotec3550MinTempF;
@@ -544,7 +544,7 @@ uint16_t IRTrotec3550::getTimer(void) const { return _.TimerHrs * 60; }
 /// @param[in] mins Nr. of Minutes for the Timer. `0` means disable the timer.
 void IRTrotec3550::setTimer(const uint16_t mins) {
   _.TimerSet = mins > 0;
-  _.TimerHrs = (std::min(mins, kTrotec3550TimerMax) / 60);
+  _.TimerHrs = (::min(mins, kTrotec3550TimerMax) / 60);
 }
 
 /// Convert a stdAc::opmode_t enum into its native mode.

@@ -2,21 +2,21 @@
 
 #include "IRutils.h"
 #ifndef UNIT_TEST
-#include <Arduino.h>
+#include "String.h"
 #endif
 
 #define __STDC_LIMIT_MACROS
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
-#include <algorithm>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRremoteESP8266.h"
 #include "IRsend.h"
 #include "IRtext.h"
+#include "minmax.h"
 
 // On the ESP8266 platform we need to use a set of ..._P functions
 // to handle the strings stored in the flash address space.
@@ -46,7 +46,7 @@
 uint64_t reverseBits(uint64_t input, uint16_t nbits) {
   if (nbits <= 1) return input;  // Reversing <= 1 bits makes no change at all.
   // Cap the nr. of bits to rotate to the max nr. of bits in the input.
-  nbits = std::min(nbits, (uint16_t)(sizeof(input) * 8));
+  nbits = ::min(nbits, (uint16_t)(sizeof(input) * 8));
   uint64_t output = 0;
   for (uint16_t i = 0; i < nbits; i++) {
     output <<= 1;

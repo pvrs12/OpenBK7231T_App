@@ -6,11 +6,11 @@
 
 #include "IRac.h"
 #ifndef UNIT_TEST
-#include <Arduino.h>
+#include "String.h"
 #endif
 #include <string.h>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include <cmath>
 #include "IRsend.h"

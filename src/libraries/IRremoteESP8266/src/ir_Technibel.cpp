@@ -8,7 +8,7 @@
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
-#include <algorithm>
+// #include <algorithm>
 
 using irutils::addBoolToString;
 using irutils::addModeToString;
@@ -185,7 +185,7 @@ void IRTechnibelAc::setTemp(const uint8_t degrees, const bool fahrenheit) {
   setTempUnit(fahrenheit);
   uint8_t temp_min = fahrenheit ? kTechnibelAcTempMinF : kTechnibelAcTempMinC;
   uint8_t temp_max = fahrenheit ? kTechnibelAcTempMaxF : kTechnibelAcTempMaxC;
-  _saved_temp = std::min(temp_max, std::max(temp_min, degrees));
+  _saved_temp = ::min(temp_max, ::max(temp_min, degrees));
   _.Temp = _saved_temp;
 }
 
@@ -349,7 +349,7 @@ bool IRTechnibelAc::getTimerEnabled(void) const {
 /// @note Time is stored internally in hours.
 void IRTechnibelAc::setTimer(const uint16_t nr_of_mins) {
   const uint8_t hours = nr_of_mins / 60;
-  _.TimerHours = std::min(kTechnibelAcTimerMax, hours);
+  _.TimerHours = ::min(kTechnibelAcTimerMax, hours);
   // Enable or not?
   setTimerEnabled(hours);
 }

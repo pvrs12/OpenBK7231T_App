@@ -12,13 +12,14 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1376
 
 #include "ir_Fujitsu.h"
-#include <algorithm>
+// #include <algorithm>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Ref:
 // These values are based on averages of measurements
@@ -469,8 +470,8 @@ void IRFujitsuAC::setTemp(const float temp, const bool useCelsius) {
     maxtemp = kFujitsuAcMaxTempF;
     offset = kFujitsuAcTempOffsetF;
   }
-  _temp = std::max(mintemp, _temp);
-  _temp = std::min(maxtemp, _temp);
+  _temp = ::max(mintemp, _temp);
+  _temp = ::min(maxtemp, _temp);
   if (_useCelsius) {
     if (_model == fujitsu_ac_remote_model_t::ARREW4E)
       _.Temp = (_temp - (offset / 2)) * 2;
@@ -658,7 +659,7 @@ uint16_t IRFujitsuAC::getOnTimer(void) const {
 /// Set the On Timer setting of the A/C.
 /// @param[in] nr_mins Nr. of minutes to set the timer to. 0 means disabled.
 void IRFujitsuAC::setOnTimer(const uint16_t nr_mins) {
-  _.OnTimer = std::min(kFujitsuAcTimerMax, nr_mins);  // Bounds check.
+  _.OnTimer = ::min(kFujitsuAcTimerMax, nr_mins);  // Bounds check.
   _rawstatemodified = true;
   if (_.OnTimer) {
     _.TimerType = kFujitsuAcOnTimer;
@@ -680,7 +681,7 @@ uint16_t IRFujitsuAC::getOffSleepTimer(void) const {
 /// Set the Off/Sleep Timer time for the A/C.
 /// @param[in] nr_mins Nr. of minutes to set the timer to. 0 means disabled.
 inline void IRFujitsuAC::setOffSleepTimer(const uint16_t nr_mins) {
-  _.OffTimer = std::min(kFujitsuAcTimerMax, nr_mins);  // Bounds check.
+  _.OffTimer = ::min(kFujitsuAcTimerMax, nr_mins);  // Bounds check.
   _rawstatemodified = true;
 }
 

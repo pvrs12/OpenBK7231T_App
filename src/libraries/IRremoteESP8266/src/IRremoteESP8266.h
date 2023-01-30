@@ -49,7 +49,7 @@
 #include <stdint.h>
 #ifdef UNIT_TEST
 #include <iostream>
-#include <string>
+//#include <string>
 #endif  // UNIT_TEST
 
 // Library Version Information

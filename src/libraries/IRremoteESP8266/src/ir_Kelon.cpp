@@ -12,7 +12,7 @@
 ///    - Explicit swing position due to AC unit limitations
 ///    - Fahrenheit.
 
-#include <algorithm>
+// #include <algorithm>
 #include <cassert>
 
 #include "ir_Kelon.h"
@@ -166,8 +166,8 @@ bool IRKelonAc::getTogglePower() const { return _.PowerToggle; }
 /// Set the temperature setting.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRKelonAc::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kKelonMinTemp, degrees);
-  temp = std::min(kKelonMaxTemp, temp);
+  uint8_t temp = ::max(kKelonMinTemp, degrees);
+  temp = ::min(kKelonMaxTemp, temp);
   _previousTemp = _.Temperature;
   _.Temperature = temp - kKelonMinTemp;
 }
@@ -179,7 +179,7 @@ uint8_t IRKelonAc::getTemp() const { return _.Temperature + kKelonMinTemp; }
 /// Set the speed of the fan.
 /// @param[in] speed 0 is auto, 1-5 is the speed
 void IRKelonAc::setFan(const uint8_t speed) {
-  uint8_t fan = std::min(speed, kKelonFanMax);
+  uint8_t fan = ::min(speed, kKelonFanMax);
 
   _previousFan = _.Fan;
   // Note: Kelon fan speeds are backwards! This code maps the range 0,1:3 to
@@ -196,8 +196,8 @@ uint8_t IRKelonAc::getFan() const {
 /// Set the dehumidification intensity.
 /// @param[in] grade has to be in the range [-2 : +2]
 void IRKelonAc::setDryGrade(const int8_t grade) {
-  int8_t drygrade = std::max(kKelonDryGradeMin, grade);
-  drygrade = std::min(kKelonDryGradeMax, drygrade);
+  int8_t drygrade = ::max(kKelonDryGradeMin, grade);
+  drygrade = ::min(kKelonDryGradeMax, drygrade);
 
   // Two's complement is clearly too bleeding edge for this manufacturer
   uint8_t outval;
@@ -297,7 +297,7 @@ bool IRKelonAc::getSupercool() const { return _.SuperCoolEnabled1; }
 /// Only multiples of 30m are supported for < 10h, then only multiples of 60m
 /// @param[in] mins Nr. of minutes
 void IRKelonAc::setTimer(uint16_t mins) {
-  const uint16_t minutes = std::min(static_cast<int>(mins), 24 * 60);
+  const uint16_t minutes = ::min(static_cast<int>(mins), 24 * 60);
 
   if (minutes / 60 >= 10) {
     uint8_t hours = minutes / 60 + 10;

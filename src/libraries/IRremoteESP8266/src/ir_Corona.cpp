@@ -6,7 +6,7 @@
 ///    - Auto/Max button press (special format)
 
 #include "ir_Corona.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #include "IRac.h"
 #include "IRrecv.h"
@@ -280,14 +280,14 @@ uint8_t* IRCoronaAc::getRaw(void) {
 /// @param[in] new_code A valid state for this protocol.
 /// @param[in] length of the new_code array.
 void IRCoronaAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  memcpy(_.raw, new_code, std::min(length, kCoronaAcStateLength));
+  memcpy(_.raw, new_code, ::min(length, kCoronaAcStateLength));
 }
 
 /// Set the temp in deg C.
 /// @param[in] temp The desired temperature in Celsius.
 void IRCoronaAc::setTemp(const uint8_t temp) {
-  uint8_t degrees = std::max(temp, kCoronaAcMinTemp);
-  degrees = std::min(degrees, kCoronaAcMaxTemp);
+  uint8_t degrees = ::max(temp, kCoronaAcMinTemp);
+  degrees = ::min(degrees, kCoronaAcMaxTemp);
   _.Temp = degrees - kCoronaAcMinTemp + 1;
 }
 

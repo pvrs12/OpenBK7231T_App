@@ -1,10 +1,11 @@
 // Copyright 2020 David Conran
 #include "ir_Airwell.h"
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 /// @file
 /// @brief Airwell "Manchester code" based protocol.
@@ -181,7 +182,7 @@ stdAc::opmode_t IRAirwellAc::toCommonMode(const uint8_t mode) {
 /// @note The speed is locked to Low when in Dry mode.
 void IRAirwellAc::setFan(const uint8_t speed) {
   _.Fan = (_.Mode == kAirwellDry) ? kAirwellFanLow
-                                  : std::min(speed, kAirwellFanAuto);
+                                  : ::min(speed, kAirwellFanAuto);
 }
 
 /// Get the current fan speed setting.
@@ -223,8 +224,8 @@ stdAc::fanspeed_t IRAirwellAc::toCommonFanSpeed(const uint8_t speed) {
 /// Set the temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRAirwellAc::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kAirwellMinTemp, degrees);
-  temp = std::min(kAirwellMaxTemp, temp);
+  uint8_t temp = ::max(kAirwellMinTemp, degrees);
+  temp = ::min(kAirwellMaxTemp, temp);
   _.Temp = (temp - kAirwellMinTemp + 1);
 }
 

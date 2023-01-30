@@ -7,10 +7,10 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1508
 
 #include "ir_Gree.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRremoteESP8266.h"
@@ -245,8 +245,8 @@ void IRGreeAC::setTemp(const uint8_t temp, const bool fahrenheit) {
   setUseFahrenheit(fahrenheit);  // Set the correct Temp units.
 
   // Make sure we have desired temp in the correct range.
-  safecelsius = std::max(static_cast<float>(kGreeMinTempC), safecelsius);
-  safecelsius = std::min(static_cast<float>(kGreeMaxTempC), safecelsius);
+  safecelsius = ::max(static_cast<float>(kGreeMinTempC), safecelsius);
+  safecelsius = ::min(static_cast<float>(kGreeMaxTempC), safecelsius);
   // An operating mode of Auto locks the temp to a specific value. Do so.
   if (_.Mode == kGreeAuto) safecelsius = 25;
 
@@ -264,7 +264,7 @@ uint8_t IRGreeAC::getTemp(void) const {
     deg = celsiusToFahrenheit(deg);
     // Retrieve the "extra" fahrenheit from elsewhere in the code.
     if (_.TempExtraDegreeF) deg++;
-    deg = std::max(deg, kGreeMinTempF);  // Cover the fact that 61F is < 16C
+    deg = ::max(deg, kGreeMinTempF);  // Cover the fact that 61F is < 16C
   }
   return deg;
 }
@@ -272,7 +272,7 @@ uint8_t IRGreeAC::getTemp(void) const {
 /// Set the speed of the fan.
 /// @param[in] speed The desired setting. 0 is auto, 1-3 is the speed.
 void IRGreeAC::setFan(const uint8_t speed) {
-  uint8_t fan = std::min(kGreeFanMax, speed);  // Bounds check
+  uint8_t fan = ::min(kGreeFanMax, speed);  // Bounds check
   if (_.Mode == kGreeDry) fan = 1;  // DRY mode is always locked to fan 1.
   // Set the basic fan values.
   _.Fan = fan;
@@ -440,7 +440,7 @@ uint16_t IRGreeAC::getTimer(void) const {
 /// @note Stores time internally in 30 min units.
 ///  e.g. 5 mins means 0 (& Off), 95 mins is  90 mins (& On). Max is 24 hours.
 void IRGreeAC::setTimer(const uint16_t minutes) {
-  uint16_t mins = std::min(kGreeTimerMax, minutes);  // Bounds check.
+  uint16_t mins = ::min(kGreeTimerMax, minutes);  // Bounds check.
   setTimerEnabled(mins >= 30);  // Timer is enabled when >= 30 mins.
   uint8_t hours = mins / 60;
   // Set the half hour bit.

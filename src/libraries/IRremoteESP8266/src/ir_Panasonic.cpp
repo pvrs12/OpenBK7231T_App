@@ -13,15 +13,19 @@
 ///   Code by crankyoldgit
 
 #include "ir_Panasonic.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
+#include "String.h"
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
+
+using arduino::String;
 
 // Constants
 /// @see http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
@@ -391,8 +395,8 @@ uint8_t IRPanasonicAc::getTemp(void) {
 /// @note Automatically safely limits the temp to the operating range supported.
 void IRPanasonicAc::setTemp(const uint8_t celsius, const bool remember) {
   uint8_t temperature;
-  temperature = std::max(celsius, kPanasonicAcMinTemp);
-  temperature = std::min(temperature, kPanasonicAcMaxTemp);
+  temperature = ::max(celsius, kPanasonicAcMinTemp);
+  temperature = ::min(temperature, kPanasonicAcMaxTemp);
   if (remember) _temp = temperature;
   setBits(&remote_state[14], kPanasonicAcTempOffset, kPanasonicAcTempSize,
           temperature);
@@ -409,8 +413,8 @@ uint8_t IRPanasonicAc::getSwingVertical(void) {
 void IRPanasonicAc::setSwingVertical(const uint8_t desired_elevation) {
   uint8_t elevation = desired_elevation;
   if (elevation != kPanasonicAcSwingVAuto) {
-    elevation = std::max(elevation, kPanasonicAcSwingVHighest);
-    elevation = std::min(elevation, kPanasonicAcSwingVLowest);
+    elevation = ::max(elevation, kPanasonicAcSwingVHighest);
+    elevation = ::min(elevation, kPanasonicAcSwingVLowest);
   }
   setBits(&remote_state[16], kLowNibble, kNibbleSize, elevation);
 }
@@ -530,7 +534,7 @@ void IRPanasonicAc::setPowerful(const bool on) {
 /// @param[in] mins The minutes component of the time.
 /// @return The nr of minutes since midnight.
 uint16_t IRPanasonicAc::encodeTime(const uint8_t hours, const uint8_t mins) {
-  return std::min(hours, (uint8_t)23) * 60 + std::min(mins, (uint8_t)59);
+  return ::min(hours, (uint8_t)23) * 60 + ::min(mins, (uint8_t)59);
 }
 
 /// Get the time from a given pointer location.
@@ -557,7 +561,7 @@ uint16_t IRPanasonicAc::getClock(void) { return _getTime(&remote_state[24]); }
 void IRPanasonicAc::_setTime(uint8_t * const ptr,
                              const uint16_t mins_since_midnight,
                              const bool round_down) {
-  uint16_t corrected = std::min(mins_since_midnight, kPanasonicAcTimeMax);
+  uint16_t corrected = ::min(mins_since_midnight, kPanasonicAcTimeMax);
   if (round_down) corrected -= corrected % 10;
   if (mins_since_midnight == kPanasonicAcTimeSpecial)
     corrected = kPanasonicAcTimeSpecial;
@@ -611,7 +615,7 @@ uint16_t IRPanasonicAc::getOffTimer(void) {
 void IRPanasonicAc::setOffTimer(const uint16_t mins_since_midnight,
                                 const bool enable) {
   // Ensure its on a 10 minute boundary and no overflow.
-  uint16_t corrected = std::min(mins_since_midnight, kPanasonicAcTimeMax);
+  uint16_t corrected = ::min(mins_since_midnight, kPanasonicAcTimeMax);
   corrected -= corrected % 10;
   if (mins_since_midnight == kPanasonicAcTimeSpecial)
     corrected = kPanasonicAcTimeSpecial;
@@ -1123,8 +1127,8 @@ bool IRPanasonicAc32::getPowerToggle(void) const { return !_.PowerToggle; }
 /// Set the desired temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRPanasonicAc32::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max((uint8_t)kPanasonicAcMinTemp, degrees);
-  temp = std::min((uint8_t)kPanasonicAcMaxTemp, temp);
+  uint8_t temp = ::max((uint8_t)kPanasonicAcMinTemp, degrees);
+  temp = ::min((uint8_t)kPanasonicAcMaxTemp, temp);
   _.Temp = temp - (kPanasonicAcMinTemp - 1);
 }
 
@@ -1245,8 +1249,8 @@ uint8_t IRPanasonicAc32::getSwingVertical(void) const { return _.SwingV; }
 void IRPanasonicAc32::setSwingVertical(const uint8_t pos) {
   uint8_t elevation = pos;
   if (elevation != kPanasonicAc32SwingVAuto) {
-    elevation = std::max(elevation, kPanasonicAcSwingVHighest);
-    elevation = std::min(elevation, kPanasonicAcSwingVLowest);
+    elevation = ::max(elevation, kPanasonicAcSwingVHighest);
+    elevation = ::min(elevation, kPanasonicAcSwingVLowest);
   }
   _.SwingV = elevation;
 }

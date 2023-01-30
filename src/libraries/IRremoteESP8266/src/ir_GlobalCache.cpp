@@ -9,8 +9,9 @@
 // Supports:
 //   Brand: Global Cache,  Model: Control Tower IR DB
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRsend.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kGlobalCacheMaxRepeat = 50;
@@ -37,7 +38,7 @@ void IRsend::sendGC(uint16_t buf[], uint16_t len) {
   enableIROut(hz);
   uint32_t periodic_time = calcUSecPeriod(hz, false);
   uint8_t emits =
-      std::min(buf[kGlobalCacheRptIndex], (uint16_t)kGlobalCacheMaxRepeat);
+      ::min(buf[kGlobalCacheRptIndex], (uint16_t)kGlobalCacheMaxRepeat);
   // Repeat
   for (uint8_t repeat = 0; repeat < emits; repeat++) {
     // First time through, start at the beginning (kGlobalCacheStartIndex),
@@ -49,7 +50,7 @@ void IRsend::sendGC(uint16_t buf[], uint16_t len) {
       // Convert periodic units to microseconds.
       // Minimum is kGlobalCacheMinUsec for actual GC units.
       uint32_t microseconds =
-          std::max(buf[offset] * periodic_time, kGlobalCacheMinUsec);
+          ::max(buf[offset] * periodic_time, kGlobalCacheMinUsec);
       // These codes start at an odd index (not even as with sendRaw).
       if (offset & 1)  // Odd bit.
         mark(microseconds);

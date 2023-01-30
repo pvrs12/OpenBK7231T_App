@@ -4,7 +4,7 @@
 /// @brief Support for Rhoss protocols.
 
 #include "ir_Rhoss.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #include "IRrecv.h"
 #include "IRsend.h"
@@ -189,8 +189,8 @@ bool IRRhossAc::getPower(void) const {
 /// Set the temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRRhossAc::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kRhossTempMin, degrees);
-  _.Temp = std::min(kRhossTempMax, temp) - kRhossTempMin;
+  uint8_t temp = ::max(kRhossTempMin, degrees);
+  _.Temp = ::min(kRhossTempMax, temp) - kRhossTempMin;
 }
 
 /// Get the current temperature setting.

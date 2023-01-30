@@ -11,14 +11,15 @@
 /// @see https://github.com/ToniA/arduino-heatpumpir/blob/master/MitsubishiHeavyHeatpumpIR.cpp
 
 #include "ir_MitsubishiHeavy.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
 #include "IRutils.h"
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
+#include "minmax.h"
 
 // Constants
 const uint16_t kMitsubishiHeavyHdrMark = 3140;
@@ -136,8 +137,8 @@ bool IRMitsubishiHeavy152Ac::getPower(void) const {
 /// @param[in] temp The temperature in degrees celsius.
 void IRMitsubishiHeavy152Ac::setTemp(const uint8_t temp) {
   uint8_t newtemp = temp;
-  newtemp = std::min(newtemp, kMitsubishiHeavyMaxTemp);
-  newtemp = std::max(newtemp, kMitsubishiHeavyMinTemp);
+  newtemp = ::min(newtemp, kMitsubishiHeavyMaxTemp);
+  newtemp = ::max(newtemp, kMitsubishiHeavyMinTemp);
   _.Temp = newtemp - kMitsubishiHeavyMinTemp;
 }
 
@@ -194,7 +195,7 @@ uint8_t IRMitsubishiHeavy152Ac::getMode(void) const {
 /// Set the Vertical Swing mode of the A/C.
 /// @param[in] pos The position/mode to set the swing to.
 void IRMitsubishiHeavy152Ac::setSwingVertical(const uint8_t pos) {
-  _.SwingV = std::min(pos, kMitsubishiHeavy152SwingVOff);
+  _.SwingV = ::min(pos, kMitsubishiHeavy152SwingVOff);
 }
 
 /// Get the Vertical Swing mode of the A/C.
@@ -206,7 +207,7 @@ uint8_t IRMitsubishiHeavy152Ac::getSwingVertical(void) const {
 /// Set the Horizontal Swing mode of the A/C.
 /// @param[in] pos The position/mode to set the swing to.
 void IRMitsubishiHeavy152Ac::setSwingHorizontal(const uint8_t pos) {
-  _.SwingH = std::min(pos, kMitsubishiHeavy152SwingHOff);
+  _.SwingH = ::min(pos, kMitsubishiHeavy152SwingHOff);
 }
 
 /// Get the Horizontal Swing mode of the A/C.
@@ -616,8 +617,8 @@ bool IRMitsubishiHeavy88Ac::getPower(void) const {
 /// @param[in] temp The temperature in degrees celsius.
 void IRMitsubishiHeavy88Ac::setTemp(const uint8_t temp) {
   uint8_t newtemp = temp;
-  newtemp = std::min(newtemp, kMitsubishiHeavyMaxTemp);
-  newtemp = std::max(newtemp, kMitsubishiHeavyMinTemp);
+  newtemp = ::min(newtemp, kMitsubishiHeavyMaxTemp);
+  newtemp = ::max(newtemp, kMitsubishiHeavyMinTemp);
   _.Temp = newtemp - kMitsubishiHeavyMinTemp;
 }
 

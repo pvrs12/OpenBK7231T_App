@@ -7,12 +7,13 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/778
 
 #include "ir_Electra.h"
-#include <algorithm>
+//// #include <algorithm>
 #include <cstring>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kElectraAcHdrMark = 9166;
@@ -116,7 +117,7 @@ uint8_t *IRElectraAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the code array.
 void IRElectraAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length, kElectraAcStateLength));
+  std::memcpy(_.raw, new_code, ::min(length, kElectraAcStateLength));
 }
 
 /// Change the power setting to On.
@@ -189,8 +190,8 @@ stdAc::opmode_t IRElectraAc::toCommonMode(const uint8_t mode) {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRElectraAc::setTemp(const uint8_t temp) {
-  uint8_t newtemp = std::max(kElectraAcMinTemp, temp);
-  newtemp = std::min(kElectraAcMaxTemp, newtemp) - kElectraAcTempDelta;
+  uint8_t newtemp = ::max(kElectraAcMinTemp, temp);
+  newtemp = ::min(kElectraAcMaxTemp, newtemp) - kElectraAcTempDelta;
   _.Temp = newtemp;
 }
 
@@ -344,15 +345,15 @@ void IRElectraAc::setSensorUpdate(const bool on) { _.SensorUpdate = on; }
 /// Set the Sensor temperature for the IFeel mode.
 /// @param[in] temp The temperature in degrees celsius.
 void IRElectraAc::setSensorTemp(const uint8_t temp) {
-  _.SensorTemp = std::min(kElectraAcSensorMaxTemp,
-                          std::max(kElectraAcSensorMinTemp, temp)) +
+  _.SensorTemp = ::min(kElectraAcSensorMaxTemp,
+                          ::max(kElectraAcSensorMinTemp, temp)) +
       kElectraAcSensorTempDelta;
 }
 
 /// Get the current sensor temperature setting for the IFeel mode.
 /// @return The current setting for temp. in degrees celsius.
 uint8_t IRElectraAc::getSensorTemp(void) const {
-  return std::max(kElectraAcSensorTempDelta, _.SensorTemp) -
+  return ::max(kElectraAcSensorTempDelta, _.SensorTemp) -
       kElectraAcSensorTempDelta;
 }
 

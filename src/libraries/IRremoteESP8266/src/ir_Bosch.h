@@ -13,7 +13,7 @@
 
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
-#include <algorithm>
+//// #include <algorithm>
 #include <cstring>
 #include "IRremoteESP8266.h"
 #include "IRsend.h"
@@ -21,7 +21,7 @@
 #include "IRtext.h"
 #include "IRutils.h"
 #ifndef UNIT_TEST
-#include <Arduino.h>
+#include "String.h"
 #endif
 #ifdef UNIT_TEST
 #include "IRsend_test.h"
@@ -42,8 +42,6 @@ using irutils::addBoolToString;
 using irutils::addModeToString;
 using irutils::addFanToString;
 using irutils::addTempToString;
-using std::min;
-using std::max;
 using std::memcpy;
 using std::memcmp;
 

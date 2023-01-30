@@ -4,12 +4,13 @@
 // Copyright 2017 David Conran
 
 #ifndef UNIT_TEST
-#include <Arduino.h>
+// TODO:
+#include "String.h"
 #endif
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRremoteESP8266.h"
 #include "IRrecv.h"

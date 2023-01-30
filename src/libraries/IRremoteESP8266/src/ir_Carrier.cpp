@@ -6,12 +6,13 @@
 /// @see CarrierAc128 https://github.com/crankyoldgit/IRremoteESP8266/issues/1797
 
 #include "ir_Carrier.h"
-#include <algorithm>
+// #include <algorithm>
 #include "IRac.h"
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addIntToString;
@@ -303,8 +304,8 @@ void IRCarrierAc64::setRaw(const uint64_t state) { _.raw = state; }
 /// Set the temp in deg C.
 /// @param[in] temp The desired temperature in Celsius.
 void IRCarrierAc64::setTemp(const uint8_t temp) {
-  uint8_t degrees = std::max(temp, kCarrierAc64MinTemp);
-  degrees = std::min(degrees, kCarrierAc64MaxTemp);
+  uint8_t degrees = ::max(temp, kCarrierAc64MinTemp);
+  degrees = ::min(degrees, kCarrierAc64MaxTemp);
   _.Temp = degrees - kCarrierAc64MinTemp;
 }
 
@@ -466,9 +467,9 @@ uint16_t IRCarrierAc64::getOnTimer(void) const {
 ///  (< 60 is disable).
 /// @note The A/C protocol only supports one hour increments.
 void IRCarrierAc64::setOnTimer(const uint16_t nr_of_mins) {
-  uint8_t hours = std::min((uint8_t)(nr_of_mins / 60), kCarrierAc64TimerMax);
+  uint8_t hours = ::min((uint8_t)(nr_of_mins / 60), kCarrierAc64TimerMax);
   _.OnTimerEnable = static_cast<bool>(hours);  // Enable
-  _.OnTimer = std::max(kCarrierAc64TimerMin, hours);  // Hours
+  _.OnTimer = ::max(kCarrierAc64TimerMin, hours);  // Hours
   if (hours) {  // If enabled, disable the Off Timer & Sleep mode.
     _cancelOffTimer();
     setSleep(false);
@@ -495,10 +496,10 @@ uint16_t IRCarrierAc64::getOffTimer(void) const {
 ///  (< 60 is disable).
 /// @note The A/C protocol only supports one hour increments.
 void IRCarrierAc64::setOffTimer(const uint16_t nr_of_mins) {
-  uint8_t hours = std::min((uint8_t)(nr_of_mins / 60), kCarrierAc64TimerMax);
+  uint8_t hours = ::min((uint8_t)(nr_of_mins / 60), kCarrierAc64TimerMax);
   // The time can be changed in sleep mode, but doesn't set the flag.
   _.OffTimerEnable = (hours && !_.Sleep);
-  _.OffTimer = std::max(kCarrierAc64TimerMin, hours);  // Hours
+  _.OffTimer = ::max(kCarrierAc64TimerMin, hours);  // Hours
   if (hours) {  // If enabled, disable the On Timer & Sleep mode.
     _cancelOnTimer();
     setSleep(false);

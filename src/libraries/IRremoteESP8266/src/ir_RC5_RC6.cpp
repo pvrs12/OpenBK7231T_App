@@ -18,12 +18,12 @@
 //   Brand: Philips,  Model: RC-5X (RC5X)
 //   Brand: Philips,  Model: Standard RC-6 (RC6)
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtimer.h"
 #include "IRutils.h"
-
+#include "minmax.h"
 // Constants
 // RC-5/RC-5X
 const uint16_t kRc5T1 = 889;
@@ -102,7 +102,7 @@ void IRsend::sendRC5(const uint64_t data, uint16_t nbits,
         space(kRc5T1);
       }
     // Footer
-    space(std::max(kRc5MinGap, kRc5MinCommandLength - usecTimer.elapsed()));
+    space(::max(kRc5MinGap, kRc5MinCommandLength - usecTimer.elapsed()));
   }
 }
 

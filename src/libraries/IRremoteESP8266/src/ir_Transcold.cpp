@@ -7,14 +7,15 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1256
 
 #include "ir_Transcold.h"
-#include <algorithm>
+// #include <algorithm>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 
@@ -160,8 +161,8 @@ bool IRTranscoldAc::handleSpecialState(const uint32_t data) {
 /// @param[in] desired The temperature in degrees celsius.
 void IRTranscoldAc::setTemp(const uint8_t desired) {
   // Range check.
-  uint8_t temp = std::min(desired, kTranscoldTempMax);
-  temp = std::max(temp, kTranscoldTempMin) - kTranscoldTempMin + 1;
+  uint8_t temp = ::min(desired, kTranscoldTempMax);
+  temp = ::max(temp, kTranscoldTempMin) - kTranscoldTempMin + 1;
   _.Temp = reverseBits(invertBits(temp, kTranscoldTempSize),
                        kTranscoldTempSize);
 }

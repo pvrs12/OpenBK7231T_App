@@ -13,9 +13,9 @@
 
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
-#ifdef ARDUINO
-#include <Arduino.h>
-#endif
+//#ifdef ARDUINO
+#include "String.h"
+//#endif
 #include "IRremoteESP8266.h"
 #include "IRsend.h"
 #ifdef UNIT_TEST

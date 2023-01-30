@@ -12,15 +12,16 @@
 /// @see https://github.com/ToniA/arduino-heatpumpir/blob/master/SharpHeatpumpIR.cpp
 
 #include "ir_Sharp.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 // period time = 1/38000Hz = 26.316 microseconds.
@@ -305,7 +306,7 @@ uint8_t *IRSharpAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRSharpAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length, kSharpAcStateLength));
+  std::memcpy(_.raw, new_code, ::min(length, kSharpAcStateLength));
   _model = getModel(true);
 }
 
@@ -441,8 +442,8 @@ void IRSharpAc::setTemp(const uint8_t temp, const bool save) {
           _.raw[kSharpAcByteTemp] = 0xC0;
       }
   }
-  uint8_t degrees = std::max(temp, kSharpAcMinTemp);
-  degrees = std::min(degrees, kSharpAcMaxTemp);
+  uint8_t degrees = ::max(temp, kSharpAcMinTemp);
+  degrees = ::min(degrees, kSharpAcMaxTemp);
   if (save) _temp = degrees;
   _.Temp = degrees - kSharpAcMinTemp;
   _.Special = kSharpAcSpecialTempEcono;
@@ -691,7 +692,7 @@ bool IRSharpAc::getTimerType(void) const { return _.TimerType; }
 /// @param[in] mins Nr. of minutes the timer is to be set to.
 /// @note Rounds down to 30 min increments. (max: 720 mins (12h), 0 is Off)
 void IRSharpAc::setTimer(bool enable, bool timer_type, uint16_t mins) {
-  uint8_t half_hours = std::min(mins / kSharpAcTimerIncrement,
+  uint8_t half_hours = ::min(mins / kSharpAcTimerIncrement,
                                 kSharpAcTimerHoursMax * 2);
   if (half_hours == 0) enable = false;
   if (!enable) {

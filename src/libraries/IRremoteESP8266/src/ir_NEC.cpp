@@ -9,7 +9,7 @@
 #define __STDC_LIMIT_MACROS
 #include "ir_NEC.h"
 #include <stdint.h>
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

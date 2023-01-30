@@ -9,16 +9,19 @@
 /// @see http://www.toshiba-carrier.co.th/AboutUs/Pages/CompanyProfile.aspx
 
 #include "ir_Toshiba.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
+#include "String.h"
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
+using arduino::String;
 // Constants
 
 // Toshiba A/C
@@ -104,7 +107,7 @@ void IRToshibaAC::send(const uint16_t repeat) {
 uint16_t IRToshibaAC::getInternalStateLength(const uint8_t state[],
                                              const uint16_t size) {
   if (size < kToshibaAcLengthByte) return 0;
-  return std::min((uint16_t)(state[kToshibaAcLengthByte] + kToshibaAcMinLength),
+  return ::min((uint16_t)(state[kToshibaAcLengthByte] + kToshibaAcMinLength),
                   kToshibaACStateLengthLong);
 }
 
@@ -209,8 +212,8 @@ bool IRToshibaAC::getPower(void) const {
 /// Set the temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRToshibaAC::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max(kToshibaAcMinTemp, degrees);
-  temp = std::min(kToshibaAcMaxTemp, temp);
+  uint8_t temp = ::max(kToshibaAcMinTemp, degrees);
+  temp = ::min(kToshibaAcMaxTemp, temp);
   _.Temp = temp - kToshibaAcMinTemp;
 }
 
@@ -347,7 +350,7 @@ bool IRToshibaAC::getFilter(void) const {
 /// @param[in] on true, the setting is on. false, the setting is off.
 void IRToshibaAC::setFilter(const bool on) {
   _.Filter = on;
-  if (on) setStateLength(std::min(kToshibaACStateLength, getStateLength()));
+  if (on) setStateLength(::min(kToshibaACStateLength, getStateLength()));
 }
 
 /// Convert a stdAc::opmode_t enum into its native mode.

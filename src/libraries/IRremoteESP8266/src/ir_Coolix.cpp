@@ -6,9 +6,9 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/484
 
 #include "ir_Coolix.h"
-#include <algorithm>
+// #include <algorithm>
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 #include "IRrecv.h"
 #include "IRsend.h"
@@ -221,8 +221,8 @@ uint8_t IRCoolixAC::getTempRaw(void) const { return _.Temp; }
 /// @param[in] desired The temperature in degrees celsius.
 void IRCoolixAC::setTemp(const uint8_t desired) {
   // Range check.
-  uint8_t temp = std::min(desired, kCoolixTempMax);
-  temp = std::max(temp, kCoolixTempMin);
+  uint8_t temp = ::min(desired, kCoolixTempMax);
+  temp = ::max(temp, kCoolixTempMin);
   setTempRaw(kCoolixTempMap[temp - kCoolixTempMin]);
 }
 
@@ -245,7 +245,7 @@ void IRCoolixAC::setSensorTempRaw(const uint8_t code) { _.SensorTemp = code; }
 /// @warning Do not send messages with a Sensor Temp more frequently than once
 ///   per minute, otherwise the A/C unit will ignore them.
 void IRCoolixAC::setSensorTemp(const uint8_t temp) {
-  setSensorTempRaw(std::min(temp, kCoolixSensorTempMax));
+  setSensorTempRaw(::min(temp, kCoolixSensorTempMax));
   setZoneFollow(true);  // Setting a Sensor temp means you want to Zone Follow.
 }
 

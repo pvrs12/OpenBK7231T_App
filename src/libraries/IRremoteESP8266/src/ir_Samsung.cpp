@@ -10,15 +10,13 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1538 (Checksum)
 
 #include "ir_Samsung.h"
-#include <algorithm>
+//// #include <algorithm>
 #include <cstring>
-#ifndef ARDUINO
-#include <string>
-#endif
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kSamsungTick = 560;
@@ -449,7 +447,7 @@ uint8_t *IRSamsungAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRSamsungAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, std::min(length,
+  std::memcpy(_.raw, new_code, ::min(length,
                                           kSamsungAcExtendedStateLength));
   // Shrink the extended state into a normal state.
   if (length > kSamsungAcStateLength) {
@@ -484,8 +482,8 @@ bool IRSamsungAc::getPower(void) const {
 /// Set the temperature.
 /// @param[in] temp The temperature in degrees celsius.
 void IRSamsungAc::setTemp(const uint8_t temp) {
-  uint8_t newtemp = std::max(kSamsungAcMinTemp, temp);
-  newtemp = std::min(kSamsungAcMaxTemp, newtemp);
+  uint8_t newtemp = ::max(kSamsungAcMinTemp, temp);
+  newtemp = ::min(kSamsungAcMaxTemp, newtemp);
   _.Temp = newtemp - kSamsungAcMinTemp;
 }
 
@@ -774,7 +772,7 @@ uint16_t IRSamsungAc::getSleepTimer(void) const {
 }
 
 #define TIMER_RESOLUTION(mins) \
-    (((std::min((mins), (uint16_t)(24 * 60))) / 10) * 10)
+    (((::min((mins), (uint16_t)(24 * 60))) / 10) * 10)
 
 /// Set the On Timer value of the A/C.
 /// @param[in] nr_of_mins The number of minutes the timer should be.

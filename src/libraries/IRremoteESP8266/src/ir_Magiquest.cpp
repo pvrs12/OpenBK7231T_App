@@ -8,7 +8,7 @@
 /// @see https://github.com/mpflaga/Arduino-IRremote
 
 #include "ir_Magiquest.h"
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRutils.h"

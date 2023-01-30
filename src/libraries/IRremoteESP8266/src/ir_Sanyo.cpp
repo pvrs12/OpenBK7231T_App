@@ -16,7 +16,7 @@
 /// @see https://github.com/crankyoldgit/IRremoteESP8266/issues/1503
 
 #include "ir_Sanyo.h"
-#include <algorithm>
+// #include <algorithm>
 #include <cstring>
 #include "IRrecv.h"
 #include "IRsend.h"
@@ -445,8 +445,8 @@ stdAc::opmode_t IRSanyoAc::toCommonMode(const uint8_t mode) {
 /// Set the desired temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRSanyoAc::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max((uint8_t)kSanyoAcTempMin, degrees);
-  temp = std::min((uint8_t)kSanyoAcTempMax, temp);
+  uint8_t temp = ::max((uint8_t)kSanyoAcTempMin, degrees);
+  temp = ::min((uint8_t)kSanyoAcTempMax, temp);
   _.Temp = temp - kSanyoAcTempDelta;
 }
 
@@ -459,8 +459,8 @@ uint8_t IRSanyoAc::getTemp(void) const {
 /// Set the sensor temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRSanyoAc::setSensorTemp(const uint8_t degrees) {
-  uint8_t temp = std::max((uint8_t)kSanyoAcTempMin, degrees);
-  temp = std::min((uint8_t)kSanyoAcTempMax, temp);
+  uint8_t temp = ::max((uint8_t)kSanyoAcTempMin, degrees);
+  temp = ::min((uint8_t)kSanyoAcTempMax, temp);
   _.SensorTemp = temp - kSanyoAcTempDelta;
 }
 
@@ -607,7 +607,7 @@ uint16_t IRSanyoAc::getOffTimer(void) const {
 ///   A value of 0 means the Off Timer is off/disabled.
 /// @note The internal precission has a resolution of 1 hour.
 void IRSanyoAc::setOffTimer(const uint16_t mins) {
-  const uint8_t hours = std::min((uint8_t)(mins / 60), kSanyoAcHourMax);
+  const uint8_t hours = ::min((uint8_t)(mins / 60), kSanyoAcHourMax);
   _.OffTimer = (hours > 0);
   _.OffHour = hours;
 }
@@ -853,8 +853,8 @@ stdAc::opmode_t IRSanyoAc88::toCommonMode(const uint8_t mode) {
 /// Set the desired temperature.
 /// @param[in] degrees The temperature in degrees celsius.
 void IRSanyoAc88::setTemp(const uint8_t degrees) {
-  uint8_t temp = std::max((uint8_t)kSanyoAc88TempMin, degrees);
-  _.Temp = std::min((uint8_t)kSanyoAc88TempMax, temp);
+  uint8_t temp = ::max((uint8_t)kSanyoAc88TempMin, degrees);
+  _.Temp = ::min((uint8_t)kSanyoAc88TempMax, temp);
 }
 
 /// Get the current desired temperature setting.
@@ -892,7 +892,7 @@ uint16_t IRSanyoAc88::getClock(void) const {
 /// Set the current clock time.
 /// @param[in] mins_since_midnight The time as nr. of minutes past midnight.
 void IRSanyoAc88::setClock(const uint16_t mins_since_midnight) {
-  uint16_t mins = std::min(mins_since_midnight, (uint16_t)(23 * 60 + 59));
+  uint16_t mins = ::min(mins_since_midnight, (uint16_t)(23 * 60 + 59));
   _.ClockMins = mins % 60;
   _.ClockHrs = mins / 60;
   _.ClockSecs = 0;

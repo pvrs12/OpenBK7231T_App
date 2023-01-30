@@ -7,7 +7,7 @@
 //   Brand: Sherwood,  Model: RC-138 remote
 //   Brand: Sherwood,  Model: RD6505(B) Receiver
 
-#include <algorithm>
+// #include <algorithm>
 #include "IRsend.h"
 
 #if SEND_SHERWOOD
@@ -19,6 +19,6 @@
 /// @note Sherwood remote codes appear to be NEC codes with a mandatory repeat
 ///   code. i.e. repeat should be >= kSherwoodMinRepeat (1).
 void IRsend::sendSherwood(uint64_t data, uint16_t nbits, uint16_t repeat) {
-  sendNEC(data, nbits, std::max((uint16_t)kSherwoodMinRepeat, repeat));
+  sendNEC(data, nbits, ::max((uint16_t)kSherwoodMinRepeat, repeat));
 }
 #endif  // SEND_SHERWOOD

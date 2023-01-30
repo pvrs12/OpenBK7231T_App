@@ -4,12 +4,12 @@
 /// @brief Support for Teco protocols.
 
 #include "ir_Teco.h"
-#include <algorithm>
+// #include <algorithm>
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
 #include "IRutils.h"
 #ifndef ARDUINO
-#include <string>
+//#include <string>
 #endif
 
 // Constants
@@ -97,8 +97,8 @@ bool IRTecoAc::getPower(void) const {
 /// @param[in] temp The temperature in degrees celsius.
 void IRTecoAc::setTemp(const uint8_t temp) {
   uint8_t newtemp = temp;
-  newtemp = std::min(newtemp, kTecoMaxTemp);
-  newtemp = std::max(newtemp, kTecoMinTemp);
+  newtemp = ::min(newtemp, kTecoMaxTemp);
+  newtemp = ::max(newtemp, kTecoMinTemp);
   _.Temp = newtemp - kTecoMinTemp;
 }
 
@@ -231,7 +231,7 @@ uint16_t IRTecoAc::getTimer(void) const {
 ///   `0` will clear the timer. Max is 24 hrs.
 /// @note Time is stored internally in increments of 30 mins.
 void IRTecoAc::setTimer(const uint16_t nr_mins) {
-  uint16_t mins = std::min(nr_mins, (uint16_t)(24 * 60));  // Limit to 24 hrs.
+  uint16_t mins = ::min(nr_mins, (uint16_t)(24 * 60));  // Limit to 24 hrs.
   uint8_t hours = mins / 60;
   _.TimerOn = mins > 0;  // Set the timer flag.
   _.HalfHour = (mins % 60) >= 30;

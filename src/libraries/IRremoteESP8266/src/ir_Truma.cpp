@@ -8,11 +8,12 @@
 
 
 #include "ir_Truma.h"
-#include <algorithm>
+// #include <algorithm>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addFanToString;
@@ -223,8 +224,8 @@ uint8_t IRTrumaAc::getMode(void) const { return _.Mode; }
 /// Set the temperature.
 /// @param[in] celsius The temperature in degrees celsius.
 void IRTrumaAc::setTemp(const uint8_t celsius) {
-  uint8_t temp = std::max(celsius, kTrumaMinTemp);
-  temp = std::min(temp, kTrumaMaxTemp);
+  uint8_t temp = ::max(celsius, kTrumaMinTemp);
+  temp = ::min(temp, kTrumaMaxTemp);
   _.Temp = temp - kTrumaTempOffset;
 }
 
