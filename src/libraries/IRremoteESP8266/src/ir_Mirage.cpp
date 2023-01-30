@@ -7,11 +7,12 @@
 
 #include "ir_Mirage.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addFanToString;
@@ -140,7 +141,7 @@ uint8_t *IRMirageAc::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] data A valid code for this protocol.
 void IRMirageAc::setRaw(const uint8_t *data) {
-  std::memcpy(_.raw, data, kMirageStateLength);
+  memcpy(_.raw, data, kMirageStateLength);
   _model = getModel(true);
 }
 
@@ -151,7 +152,7 @@ void IRMirageAc::setRaw(const uint8_t *data) {
 ///       wildly different settings.
 mirage_ac_remote_model_t IRMirageAc::getModel(const uint8_t *state) {
   Mirage120Protocol p;
-  std::memcpy(p.raw, state, kMirageStateLength);
+  memcpy(p.raw, state, kMirageStateLength);
   // Check for KKG29AC1 specific settings.
   if (p.RecycleHeat || p.Filter || p.Sleep_Kkg29ac1 || p.CleanToggle ||
       p.IFeel || p.OffTimerEnable || p.OnTimerEnable)

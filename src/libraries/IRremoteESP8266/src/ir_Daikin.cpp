@@ -25,7 +25,7 @@
 
 #include "ir_Daikin.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
@@ -780,7 +780,7 @@ uint8_t *IRDaikin2::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRDaikin2::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.raw, new_code, kDaikin2StateLength);
+  memcpy(_.raw, new_code, kDaikin2StateLength);
 }
 
 /// Change the power setting to On.
@@ -1484,7 +1484,7 @@ uint8_t *IRDaikin216::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRDaikin216::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.raw, new_code, kDaikin216StateLength);
+  memcpy(_.raw, new_code, kDaikin216StateLength);
 }
 
 /// Change the power setting to On.
@@ -1819,7 +1819,7 @@ uint8_t *IRDaikin160::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRDaikin160::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.raw, new_code, kDaikin160StateLength);
+  memcpy(_.raw, new_code, kDaikin160StateLength);
 }
 
 #if SEND_DAIKIN160
@@ -2173,7 +2173,7 @@ uint8_t *IRDaikin176::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRDaikin176::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.raw, new_code, kDaikin176StateLength);
+  memcpy(_.raw, new_code, kDaikin176StateLength);
   _saved_temp = getTemp();
 }
 
@@ -2565,7 +2565,7 @@ uint8_t *IRDaikin128::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRDaikin128::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.raw, new_code, kDaikin128StateLength);
+  memcpy(_.raw, new_code, kDaikin128StateLength);
 }
 
 #if SEND_DAIKIN128
@@ -3113,7 +3113,7 @@ uint8_t *IRDaikin152::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRDaikin152::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.raw, new_code, kDaikin152StateLength);
+  memcpy(_.raw, new_code, kDaikin152StateLength);
 }
 
 /// Change the power setting to On.

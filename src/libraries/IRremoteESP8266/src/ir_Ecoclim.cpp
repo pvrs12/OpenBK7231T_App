@@ -6,7 +6,7 @@
 
 #include "ir_Ecoclim.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRac.h"
 #include "IRrecv.h"
 #include "IRsend.h"

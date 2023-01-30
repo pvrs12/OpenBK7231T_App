@@ -9,6 +9,7 @@
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 const uint16_t kAirtonHdrMark = 6630;
 const uint16_t kAirtonBitMark = 400;

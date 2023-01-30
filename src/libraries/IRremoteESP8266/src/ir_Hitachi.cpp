@@ -11,7 +11,7 @@
 
 #include "ir_Hitachi.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
@@ -20,6 +20,7 @@
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kHitachiAcHdrMark = 3300;
@@ -203,7 +204,7 @@ uint8_t *IRHitachiAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the new_code array.
 void IRHitachiAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, ::min(length, kHitachiAcStateLength));
+  memcpy(_.raw, new_code, ::min(length, kHitachiAcStateLength));
 }
 
 #if SEND_HITACHI_AC
@@ -491,7 +492,7 @@ uint8_t *IRHitachiAc1::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the new_code array.
 void IRHitachiAc1::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, ::min(length, kHitachiAc1StateLength));
+  memcpy(_.raw, new_code, ::min(length, kHitachiAc1StateLength));
 }
 
 #if SEND_HITACHI_AC
@@ -1062,7 +1063,7 @@ uint8_t *IRHitachiAc424::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the new_code array.
 void IRHitachiAc424::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, ::min(length, kHitachiAc424StateLength));
+  memcpy(_.raw, new_code, ::min(length, kHitachiAc424StateLength));
 }
 
 #if SEND_HITACHI_AC424

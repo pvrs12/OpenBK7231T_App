@@ -14,7 +14,7 @@
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
 //// #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRremoteESP8266.h"
 #include "IRsend.h"
 #include "IRrecv.h"
@@ -42,8 +42,6 @@ using irutils::addBoolToString;
 using irutils::addModeToString;
 using irutils::addFanToString;
 using irutils::addTempToString;
-using std::memcpy;
-using std::memcmp;
 
 // Modes                Bit[0] to Section 3    Bit[1-2] to Section 1
 //                                ModeS3                   ModeS1

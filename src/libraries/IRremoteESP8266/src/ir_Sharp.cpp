@@ -13,7 +13,7 @@
 
 #include "ir_Sharp.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
@@ -288,7 +288,7 @@ void IRSharpAc::stateReset(void) {
   static const uint8_t reset[kSharpAcStateLength] = {
       0xAA, 0x5A, 0xCF, 0x10, 0x00, 0x01, 0x00, 0x00, 0x08, 0x80, 0x00, 0xE0,
       0x01};
-  std::memcpy(_.raw, reset, kSharpAcStateLength);
+  memcpy(_.raw, reset, kSharpAcStateLength);
   _temp = getTemp();
   _mode = _.Mode;
   _fan = _.Fan;
@@ -306,7 +306,7 @@ uint8_t *IRSharpAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRSharpAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, ::min(length, kSharpAcStateLength));
+  memcpy(_.raw, new_code, ::min(length, kSharpAcStateLength));
   _model = getModel(true);
 }
 

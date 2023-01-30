@@ -10,7 +10,7 @@
 
 #include "ir_Toshiba.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif

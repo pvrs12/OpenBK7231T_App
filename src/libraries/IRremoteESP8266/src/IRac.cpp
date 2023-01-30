@@ -5,14 +5,14 @@
 // to offer most common functionality across all supported devices.
 
 #include "IRac.h"
-#ifndef UNIT_TEST
+//#ifndef UNIT_TEST
 #include "String.h"
-#endif
-#include <string.h>
+//#endif
+//#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
-#include <cmath>
+#include <math.h>
 #include "IRsend.h"
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
@@ -486,9 +486,9 @@ void IRac::argo(IRArgoAC *ac,
   ac->begin();
   ac->setPower(on);
   ac->setMode(ac->convertMode(mode));
-  ac->setTemp(static_cast<uint8_t>(std::round(degrees)));
+  ac->setTemp(static_cast<uint8_t>(round(degrees)));
   if (sensorTemp != kNoTempValue) {
-    ac->setSensorTemp(static_cast<uint8_t>(std::round(sensorTemp)));
+    ac->setSensorTemp(static_cast<uint8_t>(round(sensorTemp)));
   }
   ac->setiFeel(iFeel);
   ac->setFan(ac->convertFan(fan));
@@ -534,7 +534,7 @@ void IRac::argoWrem3_ACCommand(IRArgoAC_WREM3 *ac, const bool on,
   ac->setMode(ac->convertMode(mode));
   ac->setTemp(degrees);
   if (sensorTemp != kNoTempValue) {
-    ac->setSensorTemp(static_cast<uint8_t>(std::round(sensorTemp)));
+    ac->setSensorTemp(static_cast<uint8_t>(round(sensorTemp)));
   }
   ac->setiFeel(iFeel);
   ac->setFan(ac->convertFan(fan));
@@ -560,7 +560,7 @@ void IRac::argoWrem3_ACCommand(IRArgoAC_WREM3 *ac, const bool on,
 void IRac::argoWrem3_iFeelReport(IRArgoAC_WREM3 *ac, const float sensorTemp) {
   ac->begin();
   ac->setMessageType(argoIrMessageType_t::IFEEL_TEMP_REPORT);
-  ac->setSensorTemp(static_cast<uint8_t>(std::round(sensorTemp)));
+  ac->setSensorTemp(static_cast<uint8_t>(round(sensorTemp)));
   ac->send();
 }
 
@@ -735,7 +735,7 @@ void IRac::coolix(IRCoolixAC *ac,
   // No Econo setting available.
   // No Quiet setting available.
   if (sensorTemp != kNoTempValue) {
-    ac->setSensorTemp(static_cast<uint8_t>(std::round(sensorTemp)));
+    ac->setSensorTemp(static_cast<uint8_t>(round(sensorTemp)));
   } else {
     ac->clearSensorTemp();
   }
@@ -1125,7 +1125,7 @@ void IRac::ecoclim(IREcoclimAc *ac,
   ac->setTemp(degrees);
   ac->setFan(ac->convertFan(fan));
   if (sensorTemp != kNoTempValue) {
-    ac->setSensorTemp(static_cast<uint8_t>(std::round(sensorTemp)));
+    ac->setSensorTemp(static_cast<uint8_t>(round(sensorTemp)));
   } else {
     ac->setSensorTemp(degrees);  //< Set to the desired temp
                                  //  until we can disable.
@@ -1171,7 +1171,7 @@ void IRac::electra(IRElectraAc *ac,
   ac->setMode(ac->convertMode(mode));
   ac->setTemp(degrees);
   if (sensorTemp != kNoTempValue) {
-    ac->setSensorTemp(static_cast<uint8_t>(std::round(sensorTemp)));
+    ac->setSensorTemp(static_cast<uint8_t>(round(sensorTemp)));
   }
   ac->setFan(ac->convertFan(fan));
   ac->setSwingV(swingv != stdAc::swingv_t::kOff);
@@ -2285,7 +2285,7 @@ void IRac::sanyo(IRSanyoAc *ac,
   ac->setMode(ac->convertMode(mode));
   ac->setTemp(degrees);
   if (sensorTemp != kNoTempValue) {
-    ac->setSensorTemp(static_cast<uint8_t>(std::round(sensorTemp)));
+    ac->setSensorTemp(static_cast<uint8_t>(round(sensorTemp)));
   } else {
     ac->setSensorTemp(degrees);  // Set the sensor temp to the desired
                                  // (normal) temp.

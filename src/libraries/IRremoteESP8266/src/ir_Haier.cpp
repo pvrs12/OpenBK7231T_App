@@ -12,7 +12,7 @@
 
 #include "ir_Haier.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef UNIT_TEST
 #include "String.h"
 #endif
@@ -142,7 +142,7 @@ bool IRHaierAC::validChecksum(uint8_t state[], const uint16_t length) {
 
 /// Reset the internal state to a fixed known good state.
 void IRHaierAC::stateReset(void) {
-  std::memset(_.remote_state, 0, sizeof _.remote_state);
+  memset(_.remote_state, 0, sizeof _.remote_state);
   _.Prefix = kHaierAcPrefix;
   _.unknown = 1;  // const value
   _.OffHours = 12;  // default initial state
@@ -161,7 +161,7 @@ uint8_t* IRHaierAC::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRHaierAC::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.remote_state, new_code, kHaierACStateLength);
+  memcpy(_.remote_state, new_code, kHaierACStateLength);
 }
 
 /// Set the Command/Button setting of the A/C.
@@ -596,7 +596,7 @@ bool IRHaierAC176::validChecksum(const uint8_t state[], const uint16_t length) {
 
 /// Reset the internal state to a fixed known good state.
 void IRHaierAC176::stateReset(void) {
-  std::memset(_.raw, 0, sizeof _.raw);
+  memset(_.raw, 0, sizeof _.raw);
   _.Model = kHaierAcYrw02ModelA;
   _.Prefix2 = kHaierAc176Prefix;
   _.Temp = kHaierAcYrw02DefTempC - kHaierAcYrw02MinTempC;
@@ -1512,7 +1512,7 @@ void IRHaierAC160::checksum(void) {
 
 /// Reset the internal state to a fixed known good state.
 void IRHaierAC160::stateReset(void) {
-  std::memset(_.raw, 0, sizeof _.raw);
+  memset(_.raw, 0, sizeof _.raw);
   _.Model = kHaierAcYrw02ModelA;
   _.Prefix = kHaierAc160Prefix;
   _.Temp = kHaierAcYrw02DefTempC - kHaierAcYrw02MinTempC;

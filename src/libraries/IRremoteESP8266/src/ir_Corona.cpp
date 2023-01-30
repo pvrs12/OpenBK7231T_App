@@ -7,12 +7,13 @@
 
 #include "ir_Corona.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRac.h"
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addLabeledString;

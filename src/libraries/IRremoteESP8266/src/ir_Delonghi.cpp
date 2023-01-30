@@ -7,7 +7,7 @@
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
-// #include <algorithm>
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addModeToString;

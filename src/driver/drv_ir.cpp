@@ -416,7 +416,8 @@ extern "C" commandResult_t IR_Send_Cmd(const void *context, const char *cmd, con
     }
 
     int ournamelen = (p - args);
-    decode_type_t protocol = decode_type_t::UNKNOWN;
+    decode_type_t protocol = decode_type_t::NEC; // UNKNOW?
+
     #if 0
     for (int i = 0; i < numProtocols; i++){
         const char *name = ProtocolNames[i];
@@ -455,6 +456,7 @@ extern "C" commandResult_t IR_Send_Cmd(const void *context, const char *cmd, con
         // add a 100ms delay after command
         // NOTE: this is NOT a delay here.  it adds 100ms 'space' in the TX queue
 
+        ADDLOG_INFO(LOG_FEATURE_IR, (char *)"IR send %s protocol %d addr 0x%X cmd 0x%X repeats %d", args, (int)protocol, (int)addr, (int)command, (int)repeats);
         //pIRsend->delay(100);
         success = pIRsend->send(protocol, addr, command, repeats);
         pIRsend->delay(100);

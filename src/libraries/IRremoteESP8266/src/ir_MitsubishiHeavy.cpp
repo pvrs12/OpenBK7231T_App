@@ -12,7 +12,7 @@
 
 #include "ir_MitsubishiHeavy.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
 #include "IRutils.h"
@@ -96,7 +96,7 @@ void IRMitsubishiHeavy152Ac::send(const uint16_t repeat) {
 
 /// Reset the state of the remote to a known good state/sequence.
 void IRMitsubishiHeavy152Ac::stateReset(void) {
-  std::memcpy(_.raw, kMitsubishiHeavyZmsSig, kMitsubishiHeavySigLength);
+  memcpy(_.raw, kMitsubishiHeavyZmsSig, kMitsubishiHeavySigLength);
   for (uint8_t i = kMitsubishiHeavySigLength;
        i < kMitsubishiHeavy152StateLength - 3; i += 2) _.raw[i] = 0;
   _.raw[17] = 0x80;
@@ -112,7 +112,7 @@ uint8_t *IRMitsubishiHeavy152Ac::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] data A valid code for this protocol.
 void IRMitsubishiHeavy152Ac::setRaw(const uint8_t *data) {
-  std::memcpy(_.raw, data, kMitsubishiHeavy152StateLength);
+  memcpy(_.raw, data, kMitsubishiHeavy152StateLength);
 }
 
 /// Set the requested power state of the A/C to on.
@@ -577,7 +577,7 @@ void IRMitsubishiHeavy88Ac::send(const uint16_t repeat) {
 
 /// Reset the state of the remote to a known good state/sequence.
 void IRMitsubishiHeavy88Ac::stateReset(void) {
-  std::memcpy(_.raw, kMitsubishiHeavyZjsSig, kMitsubishiHeavySigLength);
+  memcpy(_.raw, kMitsubishiHeavyZjsSig, kMitsubishiHeavySigLength);
   for (uint8_t i = kMitsubishiHeavySigLength; i < kMitsubishiHeavy88StateLength;
        i++) _.raw[i] = 0;
 }
@@ -592,7 +592,7 @@ uint8_t *IRMitsubishiHeavy88Ac::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] data A valid code for this protocol.
 void IRMitsubishiHeavy88Ac::setRaw(const uint8_t *data) {
-  std::memcpy(_.raw, data, kMitsubishiHeavy88StateLength);
+  memcpy(_.raw, data, kMitsubishiHeavy88StateLength);
 }
 
 /// Set the requested power state of the A/C to on.

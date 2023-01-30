@@ -6,7 +6,7 @@
 
 #include "ir_Voltas.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
@@ -149,7 +149,7 @@ uint8_t* IRVoltas::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRVoltas::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.raw, new_code, kVoltasStateLength);
+  memcpy(_.raw, new_code, kVoltasStateLength);
   setModel(getModel(true));
 }
 

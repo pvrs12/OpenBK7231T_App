@@ -14,7 +14,7 @@
 
 #include "ir_Panasonic.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif

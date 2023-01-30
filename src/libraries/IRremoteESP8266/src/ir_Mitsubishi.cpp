@@ -20,7 +20,7 @@
 
 #include "ir_Mitsubishi.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
@@ -282,18 +282,18 @@ bool IRrecv::decodeMitsubishiAC(decode_results *results, uint16_t offset,
     offset += used;
     if (r) {  // Is this a repeat?
       // Repeats are expected to be exactly the same.
-      if (std::memcmp(save, results->state, nbits / 8) != 0) return false;
+      if (memcmp(save, results->state, nbits / 8) != 0) return false;
     } else {  // It is the first message.
       // Compliance
       if (strict) {
         // Data signature check.
         static const uint8_t signature[5] = {0x23, 0xCB, 0x26, 0x01, 0x00};
-        if (std::memcmp(results->state, signature, 5) != 0) return false;
+        if (memcmp(results->state, signature, 5) != 0) return false;
         // Checksum verification.
         if (!IRMitsubishiAC::validChecksum(results->state)) return false;
       }
       // Save a copy of the state to compare with.
-      std::memcpy(save, results->state, nbits / 8);
+      memcpy(save, results->state, nbits / 8);
     }
   }
 
@@ -348,7 +348,7 @@ uint8_t *IRMitsubishiAC::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] data A valid code for this protocol.
 void IRMitsubishiAC::setRaw(const uint8_t *data) {
-  std::memcpy(_.raw, data, kMitsubishiACStateLength);
+  memcpy(_.raw, data, kMitsubishiACStateLength);
 }
 
 /// Calculate and set the checksum values for the internal state.
@@ -960,7 +960,7 @@ void IRMitsubishi136::stateReset(void) {
   //   https://docs.google.com/spreadsheets/d/1f8EGfIbBUo2B-CzUFdrgKQprWakoYNKM80IKZN4KXQE/edit#gid=312397579&range=A10
   static const uint8_t kReset[kMitsubishi136StateLength] = {
       0x23, 0xCB, 0x26, 0x21, 0x00, 0x40, 0xC2, 0xC7, 0x04};
-  std::memcpy(_.raw, kReset, kMitsubishi136StateLength);
+  memcpy(_.raw, kReset, kMitsubishi136StateLength);
 }
 
 /// Calculate the checksum for the current internal state of the remote.
@@ -1007,7 +1007,7 @@ uint8_t *IRMitsubishi136::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] data A valid code for this protocol.
 void IRMitsubishi136::setRaw(const uint8_t *data) {
-  std::memcpy(_.raw, data, kMitsubishi136StateLength);
+  memcpy(_.raw, data, kMitsubishi136StateLength);
 }
 
 /// Set the requested power state of the A/C to on.
@@ -1401,7 +1401,7 @@ uint8_t *IRMitsubishi112::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] data A valid code for this protocol.
 void IRMitsubishi112::setRaw(const uint8_t *data) {
-  std::memcpy(_.raw, data, kMitsubishi112StateLength);
+  memcpy(_.raw, data, kMitsubishi112StateLength);
 }
 
 /// Set the requested power state of the A/C to off.

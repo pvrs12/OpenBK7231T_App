@@ -10,7 +10,7 @@
 
 #include "ir_Whirlpool.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
@@ -19,6 +19,7 @@
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kWhirlpoolAcHdrMark = 8950;
@@ -157,7 +158,7 @@ uint8_t *IRWhirlpoolAc::getRaw(const bool calcchecksum) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRWhirlpoolAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, ::min(length, kWhirlpoolAcStateLength));
+  memcpy(_.raw, new_code, ::min(length, kWhirlpoolAcStateLength));
 }
 
 /// Get/Detect the model of the A/C.

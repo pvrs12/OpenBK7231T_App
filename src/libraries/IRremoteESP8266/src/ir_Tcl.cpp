@@ -5,13 +5,15 @@
 
 #include "ir_Tcl.h"
 // #include <algorithm>
-#include <cstring>
+// #include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
+#include "string.h"
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint8_t kTcl112AcTimerResolution = 20;  // Minutes
@@ -72,7 +74,7 @@ void IRTcl112Ac::send(const uint16_t repeat) {
   // Do we need to send the special "quiet" message?
   if (_quiet != _quiet_prev) {
     // Backup the current state.
-    std::memcpy(save, _.raw, kTcl112AcStateLength);
+    memcpy(save, _.raw, kTcl112AcStateLength);
     const uint8_t quiet_off[kTcl112AcStateLength] = {
         0x23, 0xCB, 0x26, 0x02, 0x00, 0x40, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x65};
@@ -133,7 +135,7 @@ bool IRTcl112Ac::validChecksum(uint8_t state[], const uint16_t length) {
 /// @warning This is just a guess.
 bool IRTcl112Ac::isTcl(const uint8_t state[]) {
   Tcl112Protocol mesg;
-  std::memcpy(mesg.raw, state, kTcl112AcStateLength);
+  memcpy(mesg.raw, state, kTcl112AcStateLength);
   return (mesg.MsgType != kTcl112AcNormal) || mesg.isTcl;
 }
 
@@ -143,7 +145,7 @@ void IRTcl112Ac::stateReset(void) {
   static const uint8_t reset[kTcl112AcStateLength] = {
       0x23, 0xCB, 0x26, 0x01, 0x00, 0x24, 0x03, 0x07, 0x40, 0x00, 0x00, 0x00,
       0x00, 0x03};
-  std::memcpy(_.raw, reset, kTcl112AcStateLength);
+  memcpy(_.raw, reset, kTcl112AcStateLength);
   _quiet = false;
   _quiet_prev = false;
   _quiet_explictly_set = false;
@@ -173,7 +175,7 @@ uint8_t* IRTcl112Ac::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRTcl112Ac::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, ::min(length, kTcl112AcStateLength));
+  memcpy(_.raw, new_code, ::min(length, kTcl112AcStateLength));
 }
 
 /// Set the requested power state of the A/C to on.

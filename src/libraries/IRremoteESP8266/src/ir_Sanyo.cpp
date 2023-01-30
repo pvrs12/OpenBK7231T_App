@@ -17,11 +17,12 @@
 
 #include "ir_Sanyo.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addFanToString;
@@ -327,7 +328,7 @@ IRSanyoAc::IRSanyoAc(const uint16_t pin, const bool inverted,
 void IRSanyoAc::stateReset(void) {
   static const uint8_t kReset[kSanyoAcStateLength] = {
     0x6A, 0x6D, 0x51, 0x00, 0x10, 0x45, 0x00, 0x00, 0x33};
-  std::memcpy(_.raw, kReset, kSanyoAcStateLength);
+  memcpy(_.raw, kReset, kSanyoAcStateLength);
 }
 
 /// Set up hardware to be able to send a message.
@@ -352,7 +353,7 @@ uint8_t* IRSanyoAc::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] newState A valid code for this protocol.
 void IRSanyoAc::setRaw(const uint8_t newState[]) {
-  std::memcpy(_.raw, newState, kSanyoAcStateLength);
+  memcpy(_.raw, newState, kSanyoAcStateLength);
 }
 
 /// Calculate the checksum for a given state.
@@ -758,7 +759,7 @@ IRSanyoAc88::IRSanyoAc88(const uint16_t pin, const bool inverted,
 void IRSanyoAc88::stateReset(void) {
   static const uint8_t kReset[kSanyoAc88StateLength] = {
     0xAA, 0x55, 0xA0, 0x16, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x10};
-  std::memcpy(_.raw, kReset, kSanyoAc88StateLength);
+  memcpy(_.raw, kReset, kSanyoAc88StateLength);
 }
 
 /// Set up hardware to be able to send a message.
@@ -782,7 +783,7 @@ uint8_t* IRSanyoAc88::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] newState A valid code for this protocol.
 void IRSanyoAc88::setRaw(const uint8_t newState[]) {
-  std::memcpy(_.raw, newState, kSanyoAc88StateLength);
+  memcpy(_.raw, newState, kSanyoAc88StateLength);
 }
 
 /// Set the requested power state of the A/C to on.

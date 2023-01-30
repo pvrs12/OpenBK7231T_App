@@ -5,11 +5,12 @@
 
 #include "ir_Rhoss.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 const uint16_t kRhossHdrMark = 3042;
 const uint16_t kRhossHdrSpace = 4248;
@@ -165,7 +166,7 @@ uint8_t* IRRhossAc::getRaw(void) {
 /// Set the raw state of the object.
 /// @param[state] state The raw state from the native IR message.
 void IRRhossAc::setRaw(const uint8_t state[]) {
-  std::memcpy(_.raw, state, kRhossStateLength);
+  memcpy(_.raw, state, kRhossStateLength);
 }
 
 /// Set the internal state to have the power on.

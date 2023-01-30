@@ -7,7 +7,7 @@
 
 #include "ir_Amcor.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
@@ -149,7 +149,7 @@ uint8_t* IRAmcorAc::getRaw(void) {
 /// Set the raw state of the object.
 /// @param[in] state The raw state from the native IR message.
 void IRAmcorAc::setRaw(const uint8_t state[]) {
-  std::memcpy(_.raw, state, kAmcorStateLength);
+  memcpy(_.raw, state, kAmcorStateLength);
 }
 
 /// Set the internal state to have the power on.

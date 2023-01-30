@@ -9,6 +9,7 @@
 
 // #include <algorithm>
 #include "IRsend.h"
+#include "minmax.h"
 
 #if SEND_SHERWOOD
 /// Send an IR command to a Sherwood device.

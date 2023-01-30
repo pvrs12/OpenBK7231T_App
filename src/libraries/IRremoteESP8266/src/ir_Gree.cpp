@@ -8,7 +8,7 @@
 
 #include "ir_Gree.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
@@ -18,6 +18,7 @@
 #include "IRtext.h"
 #include "IRutils.h"
 #include "ir_Kelvinator.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kGreeHdrMark = 9000;
@@ -119,7 +120,7 @@ IRGreeAC::IRGreeAC(const uint16_t pin, const gree_ac_remote_model_t model,
 /// Reset the internal state to a fixed known good state.
 void IRGreeAC::stateReset(void) {
   // This resets to a known-good state to Power Off, Fan Auto, Mode Auto, 25C.
-  std::memset(_.remote_state, 0, sizeof _.remote_state);
+  memset(_.remote_state, 0, sizeof _.remote_state);
   _.Temp = 9;  // _.remote_state[1] = 0x09;
   _.Light = true;  // _.remote_state[2] = 0x20;
   _.unknown1 = 5;  // _.remote_state[3] = 0x50;
@@ -154,7 +155,7 @@ uint8_t* IRGreeAC::getRaw(void) {
 /// Set the internal state from a valid code for this protocol.
 /// @param[in] new_code A valid code for this protocol.
 void IRGreeAC::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.remote_state, new_code, kGreeStateLength);
+  memcpy(_.remote_state, new_code, kGreeStateLength);
   // We can only detect the difference between models when the power is on.
   if (_.Power) {
     if (_.ModelA)

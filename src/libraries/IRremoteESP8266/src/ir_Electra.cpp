@@ -8,7 +8,7 @@
 
 #include "ir_Electra.h"
 //// #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
@@ -117,7 +117,7 @@ uint8_t *IRElectraAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length of the code array.
 void IRElectraAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, ::min(length, kElectraAcStateLength));
+  memcpy(_.raw, new_code, ::min(length, kElectraAcStateLength));
 }
 
 /// Change the power setting to On.

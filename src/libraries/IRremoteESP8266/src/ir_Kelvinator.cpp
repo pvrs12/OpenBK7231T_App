@@ -16,7 +16,7 @@
 
 #include "ir_Kelvinator.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef ARDUINO
 //#include <string>
 #endif
@@ -25,6 +25,7 @@
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kKelvinatorTick = 85;
@@ -152,7 +153,7 @@ uint8_t *IRKelvinatorAC::getRaw(void) {
 /// Set the raw state of the object.
 /// @param[in] new_code The raw state from the native IR message.
 void IRKelvinatorAC::setRaw(const uint8_t new_code[]) {
-  std::memcpy(_.raw, new_code, kKelvinatorStateLength);
+  memcpy(_.raw, new_code, kKelvinatorStateLength);
 }
 
 /// Calculate the checksum for a given block of state.

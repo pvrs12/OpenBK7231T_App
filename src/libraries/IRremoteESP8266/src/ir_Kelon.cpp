@@ -21,7 +21,7 @@
 #include "IRsend.h"
 #include "IRutils.h"
 #include "IRtext.h"
-
+#include "minmax.h"
 
 using irutils::addBoolToString;
 using irutils::addIntToString;

@@ -11,7 +11,7 @@
 
 #include "ir_Samsung.h"
 //// #include <algorithm>
-#include <cstring>
+#include <string.h>
 #include "IRrecv.h"
 #include "IRsend.h"
 #include "IRtext.h"
@@ -293,7 +293,7 @@ void IRSamsungAc::stateReset(const bool extended, const bool initialPower) {
   static const uint8_t kReset[kSamsungAcExtendedStateLength] = {
       0x02, 0x92, 0x0F, 0x00, 0x00, 0x00, 0xF0,
       0x01, 0x02, 0xAE, 0x71, 0x00, 0x15, 0xF0};
-  std::memcpy(_.raw, kReset, kSamsungAcExtendedStateLength);
+  memcpy(_.raw, kReset, kSamsungAcExtendedStateLength);
   _forceextended = extended;
   _lastsentpowerstate = initialPower;
   setPower(initialPower);
@@ -392,17 +392,17 @@ void IRSamsungAc::sendExtended(const uint16_t repeat) {
   // Copy/convert the internal state to an extended state by
   // copying the second section to the third section, and inserting the extended
   // middle (second) section.
-  std::memcpy(_.raw + 2 * kSamsungAcSectionLength,
+  memcpy(_.raw + 2 * kSamsungAcSectionLength,
               _.raw + kSamsungAcSectionLength,
               kSamsungAcSectionLength);
-  std::memcpy(_.raw + kSamsungAcSectionLength, extended_middle_section,
+  memcpy(_.raw + kSamsungAcSectionLength, extended_middle_section,
               kSamsungAcSectionLength);
   _setOnTimer();
   _setSleepTimer();  // This also sets any Off Timer if needed too.
   // Send it.
   _irsend.sendSamsungAC(getRaw(), kSamsungAcExtendedStateLength, repeat);
   // Now revert it by copying the third section over the second section.
-  std::memcpy(_.raw + kSamsungAcSectionLength,
+  memcpy(_.raw + kSamsungAcSectionLength,
               _.raw + 2 * kSamsungAcSectionLength,
               kSamsungAcSectionLength);
 
@@ -447,7 +447,7 @@ uint8_t *IRSamsungAc::getRaw(void) {
 /// @param[in] new_code A valid code for this protocol.
 /// @param[in] length The length/size of the new_code array.
 void IRSamsungAc::setRaw(const uint8_t new_code[], const uint16_t length) {
-  std::memcpy(_.raw, new_code, ::min(length,
+  memcpy(_.raw, new_code, ::min(length,
                                           kSamsungAcExtendedStateLength));
   // Shrink the extended state into a normal state.
   if (length > kSamsungAcStateLength) {

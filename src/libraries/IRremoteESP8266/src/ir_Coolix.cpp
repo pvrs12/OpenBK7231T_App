@@ -14,6 +14,7 @@
 #include "IRsend.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 // Pulse parms are *50-100 for the Mark and *50+100 for the space

@@ -3,6 +3,8 @@
 // Copyright 2015 Sebastien Warin
 // Copyright 2017, 2019 David Conran
 
+#if !PLATFORM_BEKEN
+
 #include "IRrecv.h"
 #include <stddef.h>
 #ifndef UNIT_TEST
@@ -2069,3 +2071,5 @@ volatile irparams_t *IRrecv::_getParamsPtr(void) {
 }
 #endif  // UNIT_TEST
 // End of IRrecv class -------------------
+
+#endif

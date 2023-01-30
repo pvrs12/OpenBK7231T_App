@@ -8,13 +8,14 @@
 
 #include "ir_Trotec.h"
 // #include <algorithm>
-#include <cstring>
+#include <string.h>
 #ifndef UNIT_TEST
 #include "String.h"
 #endif
 #include "IRremoteESP8266.h"
 #include "IRtext.h"
 #include "IRutils.h"
+#include "minmax.h"
 
 // Constants
 const uint16_t kTrotecHdrMark = 5952;
@@ -440,7 +441,7 @@ void IRTrotec3550::checksum(void) { _.Sum = calcChecksum(_.raw); }
 void IRTrotec3550::stateReset(void) {
   static const uint8_t kReset[kTrotecStateLength] = {
     0x55, 0x60, 0x00, 0x0D, 0x00, 0x00, 0x10, 0x88, 0x5A};
-  std::memcpy(_.raw, kReset, kTrotecStateLength);
+  memcpy(_.raw, kReset, kTrotecStateLength);
 }
 
 /// Get a PTR to the internal state/code for this protocol.

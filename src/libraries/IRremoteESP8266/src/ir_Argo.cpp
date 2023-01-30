@@ -11,7 +11,7 @@
 #include "ir_Argo.h"
 // #include <algorithm>
 #include <cmath>
-#include <cstring>
+#include <string.h>
 #ifndef UNIT_TEST
 #include "String.h"
 #endif  // UNIT_TEST
@@ -63,12 +63,12 @@ using irutils::addTimerModeToString;
 /// @note Consider removing this param (default to true) if WREM-2 works w/ it
 void IRsend::sendArgo(const unsigned char data[], const uint16_t nbytes,
                       const uint16_t repeat, bool sendFooter /*= false*/) {
-  if (nbytes < ::min({kArgo3AcControlStateLength,
+  if (nbytes < ::min(kArgo3AcControlStateLength,
                          kArgo3ConfigStateLength,
                          kArgo3iFeelReportStateLength,
                          kArgo3TimerStateLength,
                          kArgoStateLength,
-                         kArgoShortStateLength})) {
+                         kArgoShortStateLength)) {
     return;  // Not enough bytes to send a proper message.
   }
 
@@ -560,7 +560,7 @@ uint8_t* IRArgoACBase<T>::getRaw(void) {
 /// @param[in] length The length of raw state in bytes.
 template<typename T>
 void IRArgoACBase<T>::setRaw(const uint8_t state[], const uint16_t length) {
-  std::memcpy(_.raw, state, length);
+  memcpy(_.raw, state, length);
   _messageType = getMessageType(state, length);
   _length = length;
 }

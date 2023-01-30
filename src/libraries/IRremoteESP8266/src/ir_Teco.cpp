@@ -11,6 +11,8 @@
 #ifndef ARDUINO
 //#include <string>
 #endif
+#include "String.h"
+#include "minmax.h"
 
 // Constants
 // using SPACE modulation.

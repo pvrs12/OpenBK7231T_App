@@ -5,6 +5,24 @@
 #include "String.h"
 #endif
 
+
+#if PLATFORM_BEKEN
+//TODO
+static uint32_t  micros(void)
+{
+  //TODO
+  return 0;
+}
+
+static uint32_t  millis(void)
+{
+  //TODO
+  return 0;
+}
+
+#endif
+
+
 #ifdef UNIT_TEST
 // Used to help simulate elapsed time in unit tests.
 uint32_t _IRtimer_unittest_now = 0;
