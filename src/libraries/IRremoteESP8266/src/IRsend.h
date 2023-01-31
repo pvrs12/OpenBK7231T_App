@@ -12,11 +12,6 @@
 // Updated by markszabo (https://github.com/crankyoldgit/IRremoteESP8266) for
 // sending IR code on ESP8266
 
-#if TEST || UNIT_TEST
-#define VIRTUAL virtual
-#else
-#define VIRTUAL
-#endif
 
 // Constants
 // Offset (in microseconds) to use in Period time calculations to account for
@@ -32,6 +27,10 @@ const int8_t kPeriodOffset = -2;
 // Calculated on ESP8266 Wemos D1 mini using v2.4.1 with v2.4.0 ESP core @ 40MHz
 const int8_t kPeriodOffset = -5;
 #endif  // (defined(ESP8266) && F_CPU == 160000000L)
+
+
+
+
 const uint8_t kDutyDefault = 50;  // Percentage
 const uint8_t kDutyMax = 100;     // Percentage
 // delayMicroseconds() is only accurate to 16383us.
@@ -240,9 +239,11 @@ class IRsend {
                   bool use_modulation = true);
   void begin();
   void enableIROut(uint32_t freq, uint8_t duty = kDutyDefault);
-  VIRTUAL void _delayMicroseconds(uint32_t usec);
-  VIRTUAL uint16_t mark(uint16_t usec);
-  VIRTUAL void space(uint32_t usec);
+
+  virtual void _delayMicroseconds(uint32_t usec);
+  virtual uint16_t mark(uint16_t usec);
+  virtual void space(uint32_t usec);
+
   int8_t calibrate(uint16_t hz = 38000U);
   void sendRaw(const uint16_t buf[], const uint16_t len, const uint16_t hz);
   void sendData(uint16_t onemark, uint32_t onespace, uint16_t zeromark,
@@ -891,8 +892,8 @@ class IRsend {
 #endif  // UNIT_TEST
   uint8_t outputOn;
   uint8_t outputOff;
-  VIRTUAL void ledOff();
-  VIRTUAL void ledOn();
+  virtual void ledOff();
+  virtual void ledOn();
 #ifndef UNIT_TEST
 
  private:

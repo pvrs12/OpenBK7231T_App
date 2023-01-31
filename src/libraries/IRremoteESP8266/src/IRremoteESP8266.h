@@ -79,7 +79,7 @@
 
 // Set the language & locale for the library. See the `locale` dir for options.
 #ifndef _IR_LOCALE_
-#define _IR_LOCALE_ en-AU
+#define _IR_LOCALE_ en-US
 #endif  // _IR_LOCALE_
 
 // Do we enable all the protocols by default (true), or disable them (false)?

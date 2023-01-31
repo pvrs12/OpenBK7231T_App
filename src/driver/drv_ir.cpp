@@ -209,6 +209,8 @@ SpoofIrReceiver IrReceiver;
 #include "../libraries/IRremoteESP8266/src/IRrecv.h"
 #include "../libraries/IRremoteESP8266/src/IRutils.h"
 #include "../libraries/IRremoteESP8266/src/IRac.h"
+#include "../libraries/IRremoteESP8266/src/IRproto.h"
+
 
 extern "C" int PIN_GetPWMIndexForPinIndex(int pin) ;
 
@@ -218,6 +220,7 @@ extern "C" int PIN_GetPWMIndexForPinIndex(int pin) ;
 // and then every 50us service the rolling buffer, changing the PWM from 0 duty to 50% duty
 // appropriately.
 #define SEND_MAXBITS 128
+
 class myIRsend : public IRsend {
     public:
         myIRsend(uint_fast8_t aSendPin):IRsend(aSendPin){
@@ -231,6 +234,7 @@ class myIRsend : public IRsend {
         uint32_t millis(){
             return our_ms;
         }
+
         void delay(long int ms){
             // add a pure delay to our queue
         	ADDLOG_INFO(LOG_FEATURE_IR, (char *)"Delay %dms", ms);
@@ -238,8 +242,6 @@ class myIRsend : public IRsend {
         }
 
         uint16_t mark(uint16_t aMarkMicros){
-            
-            ADDLOG_ERROR(LOG_FEATURE_IR, (char *)"mark:%d", (int)aMarkMicros);
             // sends a high for aMarkMicros
             uint32_t newtimein = (timein + 1)%(SEND_MAXBITS * 2);
             if (newtimein != timeout){
@@ -255,7 +257,6 @@ class myIRsend : public IRsend {
         }
 
         void space(uint32_t aMarkMicros){
-            ADDLOG_ERROR(LOG_FEATURE_IR, (char *)"space:%d", (int)aMarkMicros);
             // sends a low for aMarkMicros
             uint32_t newtimein = (timein + 1)%(SEND_MAXBITS * 2);
             if (newtimein != timeout){
@@ -268,7 +269,8 @@ class myIRsend : public IRsend {
             }
         }
 
-        void enableIROut(uint32_t freq, uint8_t duty){ //uint_fast8_t aFrequencyKHz
+        void enableIROut(uint32_t freq, uint8_t duty){ 
+            //uint_fast8_t aFrequencyKHz
             if (freq < 1000)  // Were we given kHz? Supports the old call usage.
                 freq *= 1000;
 
@@ -299,7 +301,7 @@ class myIRsend : public IRsend {
             if (timein != timeout){
                 val = times[timeout];
                 timeout = (timeout + 1)%(SEND_MAXBITS * 2);
-                timecount--;
+                timecount --;
             }
             return val;
         }
@@ -329,7 +331,7 @@ extern "C" void DRV_IR_ISR(UINT8 t){
     if (pIRsend && (pIRsend->pwmIndex >= 0)){
         pIRsend->our_us += 50;
         if (pIRsend->our_us > 1000){
-            pIRsend->our_ms++;
+            pIRsend->our_ms ++;
             pIRsend->our_us -= 1000;
         }
 
@@ -396,13 +398,27 @@ extern "C" void DRV_IR_ISR(UINT8 t){
     ir_counter++;
 }
 
+decode_type_t find_protocol_by_name(const char* args)
+{
+    decode_type_t protocol = decode_type_t::UNKNOWN; // UNKNOW?
+
+    for (int i = 0; i < numProtocols; i++) {
+        const char *name = ProtocolNames[i];
+        int namelen = strlen(name);
+        if (!my_strnicmp(name, args, namelen) && (ournamelen == namelen)){
+            protocol = (decode_type_t)i;
+            break;
+        }
+    }
+    return protocol;
+}
+
+
 extern "C" commandResult_t IR_Send_Cmd(const void *context, const char *cmd, const char *args_in, int cmdFlags) {
-    //int numProtocols = sizeof(ProtocolNames)/sizeof(*ProtocolNames);
-    int numProtocols = 0; //TODO:
     if (!args_in) return CMD_RES_NOT_ENOUGH_ARGUMENTS;
-    char args[20];
-    strncpy(args, args_in, 19);
-    args[19] = 0;
+    char args[64];
+    strncpy(args, args_in, sizeof(args)-1);
+    args[sizeof(args)-1] = 0;
 
     // split arg at hyphen;
     char *p = args;
@@ -416,18 +432,7 @@ extern "C" commandResult_t IR_Send_Cmd(const void *context, const char *cmd, con
     }
 
     int ournamelen = (p - args);
-    decode_type_t protocol = decode_type_t::NEC; // UNKNOW?
-
-    #if 0
-    for (int i = 0; i < numProtocols; i++){
-        const char *name = ProtocolNames[i];
-        int namelen = strlen(name);
-        if (!my_strnicmp(name, args, namelen) && (ournamelen == namelen)){
-            protocol = i;
-            break;
-        }
-    }
-    #endif //TODO
+    decode_type_t protocol = find_protocol_by_name(args);
 
     p++;
     int addr = strtol(p, &p, 16);
@@ -445,20 +450,12 @@ extern "C" commandResult_t IR_Send_Cmd(const void *context, const char *cmd, con
         repeats = strtol(p, &p, 16);
     }
 
-    // data.protocol = (decode_type_t)protocol;
-    // data.address = addr;
-    // data.command = command;
-    // data.flags = 0;
-
     if (pIRsend){
         bool success = true;  // Assume success.
-        //pIRsend->write(&data, (int_fast8_t) repeats);
+
+        success = pIRsend->send(protocol, addr, command, repeats);
         // add a 100ms delay after command
         // NOTE: this is NOT a delay here.  it adds 100ms 'space' in the TX queue
-
-        ADDLOG_INFO(LOG_FEATURE_IR, (char *)"IR send %s protocol %d addr 0x%X cmd 0x%X repeats %d", args, (int)protocol, (int)addr, (int)command, (int)repeats);
-        //pIRsend->delay(100);
-        success = pIRsend->send(protocol, addr, command, repeats);
         pIRsend->delay(100);
 
         ADDLOG_INFO(LOG_FEATURE_IR, (char *)"IR send %s protocol %d addr 0x%X cmd 0x%X repeats %d", args, (int)protocol, (int)addr, (int)command, (int)repeats);
@@ -551,6 +548,32 @@ extern "C" commandResult_t IR_Enable(const void *context, const char *cmd, const
 }
 
 
+
+extern "C" commandResult_t IR_AC_Cmd(const void *context, const char *cmd, const char *args_in, int cmdFlags) {
+    if (!args_in) return CMD_RES_NOT_ENOUGH_ARGUMENTS;
+
+    char args[64];
+    strncpy(args, args_in, sizeof(args)-1);
+    args[sizeof(args)-1] = 0;
+
+    // split arg at hyphen;
+    char *p = args;
+    while (*p && (*p != '-') && (*p != ' ')){
+        p++;
+    }
+
+    if ((*p != '-') && (*p != ' ')) {
+        ADDLOG_ERROR(LOG_FEATURE_IR, (char *)"IRSend cmnd not valid [%s] not like [NEC-0-1A] or [NEC 0 1A 1].", args);
+        return CMD_RES_BAD_ARGUMENT;
+    }
+
+    decode_type_t protocol = find_protocol_by_name(args);
+
+    ADDLOG_ERROR(LOG_FEATURE_IR, (char *)"IRAC cmnd not implemented yet", args);
+
+    return CMD_RES_OK;
+}
+
 // test routine to start IR RX and TX
 // currently fixed pins for testing.
 extern "C" void DRV_IR_Init(){
@@ -618,6 +641,7 @@ extern "C" void DRV_IR_Init(){
 	//cmddetail:"fn":"IR_Send_Cmd","file":"driver/drv_ir.cpp","requires":"",
 	//cmddetail:"examples":""}
             CMD_RegisterCommand("IRSend",NULL,IR_Send_Cmd, NULL, NULL);
+            CMD_RegisterCommand("IRAC",NULL,IR_AC_Cmd, NULL, NULL);
 	//cmddetail:{"name":"IREnable","args":"[Str][1or0]",
 	//cmddetail:"descr":"Enable/disable aspects of IR.  IREnable RXTX 0/1 - enable Rx whilst Tx.  IREnable [protocolname] 0/1 - enable/disable a specified protocol",
 	//cmddetail:"fn":"IR_Enable","file":"driver/drv_ir.cpp","requires":"",

@@ -17,9 +17,6 @@
 #include "IRtimer.h"
 
 #if PLATFORM_BEKEN
-//TODO
-#endif
-
 //TODO: check these?
 typedef enum {
   LOW     = 0,
@@ -35,6 +32,8 @@ typedef enum {
   INPUT_PULLUP    = 0x2,
   INPUT_PULLDOWN  = 0x3,
 } PinMode;
+#endif
+
 
 /// Constructor for an IRsend object.
 /// @param[in] IRsendPin Which GPIO pin to use when sending an IR command.
@@ -111,6 +110,7 @@ uint32_t IRsend::calcUSecPeriod(uint32_t hz, bool use_offset) {
 ///  microseconds timing. Thus minor changes to the freq & duty values may have
 ///  limited effect. You've been warned.
 void IRsend::enableIROut(uint32_t freq, uint8_t duty) {
+  #if 0
   // Set the duty cycle to use if we want freq. modulation.
   if (modulation) {
     _dutycycle = ::min(duty, kDutyMax);
@@ -127,6 +127,7 @@ void IRsend::enableIROut(uint32_t freq, uint8_t duty) {
   onTimePeriod = (period * _dutycycle) / kDutyMax;
   // Nr. of uSeconds the LED will be off per pulse.
   offTimePeriod = period - onTimePeriod;
+  #endif //0
 }
 
 #if ALLOW_DELAY_CALLS
@@ -176,6 +177,7 @@ void IRsend::_delayMicroseconds(uint32_t usec) {
 /// Ref:
 ///   https://www.analysir.com/blog/2017/01/29/updated-esp8266-nodemcu-backdoor-upwm-hack-for-ir-signals/
 uint16_t IRsend::mark(uint16_t usec) {
+  #if 0
   // Handle the simple case of no required frequency modulation.
   if (!modulation || _dutycycle >= 100) {
     ledOn();
@@ -205,7 +207,8 @@ uint16_t IRsend::mark(uint16_t usec) {
         ::min(usec - elapsed - onTimePeriod, (uint32_t)offTimePeriod));
     elapsed = usecTimer.elapsed();  // Update & recache the actual elapsed time.
   }
-  return counter;
+  #endif //0
+  return 0;
 }
 
 /// Turn the pin (LED) off for a given time.
@@ -213,9 +216,11 @@ uint16_t IRsend::mark(uint16_t usec) {
 /// A space is no output, so the PWM output is disabled.
 /// @param[in] time Time in microseconds (us).
 void IRsend::space(uint32_t time) {
+  #if 0
   ledOff();
   if (time == 0) return;
   _delayMicroseconds(time);
+  #endif 
 }
 
 /// Calculate & set any offsets to account for execution times during sending.
@@ -226,6 +231,7 @@ void IRsend::space(uint32_t time) {
 /// @note This will generate an 65535us mark() IR LED signal.
 ///  This only needs to be called once, if at all.
 int8_t IRsend::calibrate(uint16_t hz) {
+  #if 0
   if (hz < 1000)  // Were we given kHz? Supports the old call usage.
     hz *= 1000;
   periodOffset = 0;  // Turn off any existing offset while we calibrate.
@@ -251,6 +257,8 @@ int8_t IRsend::calibrate(uint16_t hz) {
   // Store the difference between the actual time per period vs. calculated.
   periodOffset = (int8_t)((double)calcPeriod - actualPeriod);
   return periodOffset;
+  #endif 
+  return 0;
 }
 
 /// Generic method for sending data that is common to most protocols.
