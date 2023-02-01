@@ -398,7 +398,7 @@ extern "C" void DRV_IR_ISR(UINT8 t){
     ir_counter++;
 }
 
-decode_type_t find_protocol_by_name(const char* args)
+decode_type_t find_protocol_by_name(const char* args,int ournamelen)
 {
     decode_type_t protocol = decode_type_t::UNKNOWN; // UNKNOW?
 
@@ -432,7 +432,7 @@ extern "C" commandResult_t IR_Send_Cmd(const void *context, const char *cmd, con
     }
 
     int ournamelen = (p - args);
-    decode_type_t protocol = find_protocol_by_name(args);
+    decode_type_t protocol = find_protocol_by_name(args,ournamelen);
 
     p++;
     int addr = strtol(p, &p, 16);
@@ -561,13 +561,13 @@ extern "C" commandResult_t IR_AC_Cmd(const void *context, const char *cmd, const
     while (*p && (*p != '-') && (*p != ' ')){
         p++;
     }
-
+    int ournamelen = (p - args);
     if ((*p != '-') && (*p != ' ')) {
         ADDLOG_ERROR(LOG_FEATURE_IR, (char *)"IRSend cmnd not valid [%s] not like [NEC-0-1A] or [NEC 0 1A 1].", args);
         return CMD_RES_BAD_ARGUMENT;
     }
 
-    decode_type_t protocol = find_protocol_by_name(args);
+    decode_type_t protocol = find_protocol_by_name(args,ournamelen);
 
     ADDLOG_ERROR(LOG_FEATURE_IR, (char *)"IRAC cmnd not implemented yet", args);
 
